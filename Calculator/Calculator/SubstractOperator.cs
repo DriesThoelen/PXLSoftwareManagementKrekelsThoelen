@@ -8,7 +8,7 @@ namespace Calculator
 {
     public class SubstractOperator
     {
-        public double Substract(double[] args)
+        public double Substract(params double[] args)
         {
             double result = args[0];
 
