@@ -8,9 +8,16 @@ namespace Calculator
 {
     public class AddOperator
     {
-        public double Add(double[] args)
+        public double Add(params double[] args)
         {
-            return args.Sum();
+            double result = args[0];
+
+            foreach (double arg in args.Skip(1))
+            {
+                result += arg;
+            }
+
+            return result;
         }
     }
 }
