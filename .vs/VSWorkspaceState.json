@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Calculator"
+    "\\Local settings (.vs)\\WPFCore",
+    "\\Local settings (.vs)\\WPFCore\\v16\\Server",
+    "\\WPFCore"
   ],
-  "SelectedNode": "\\Calculator\\Calculator.sln",
+  "SelectedNode": "\\Local settings (.vs)",
   "PreviewInSolutionExplorer": false
 }
