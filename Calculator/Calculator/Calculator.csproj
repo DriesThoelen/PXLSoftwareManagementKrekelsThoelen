@@ -73,9 +73,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CalculatingUnit.cs" />
     <Compile Include="DivisionOperator.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="MultiplyOperator.cs" />
+    <Compile Include="Operation.cs" />
+    <Compile Include="OperationExtractor.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="SubstractOperator.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Calculator.Annotations;
@@ -13,11 +14,18 @@ namespace Calculator
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        private CalculatingUnit _calculator = new CalculatingUnit();
         public ICommand AddNumberCommand { protected set; get; }
 
         public ICommand DeleteNumberCommand { protected set; get; }
 
+        public ICommand ClearCommand { protected set; get; }
+
+        public ICommand CalculateCommand { protected set; get; }
+
         string operationString = "";
+
+        private Regex _regEx = new Regex(@"\d+" + "[" + Regex.Escape("+") + "\\-" + Regex.Escape("*") + Regex.Escape("/") + "]+" + @"\d+");
 
         public MainWindowViewModel()
         {
@@ -37,6 +45,23 @@ namespace Calculator
                     // Return true if there's something to delete.
                     return OperationString.Length > 0;
                 });
+
+            ClearCommand = new RelayCommand(() =>
+                {
+                    // Clear the input string.
+                    OperationString = String.Empty;
+                },
+                () =>
+                {
+                    // Return true if there's something to clear.
+                    return OperationString.Length > 0;
+                });
+
+            CalculateCommand = new RelayCommand(() =>
+                {
+                    OperationString = _calculator.Calculate(OperationString).ToString();
+                },
+                () => { return _regEx.IsMatch(OperationString); });
         }
 
         public string OperationString
