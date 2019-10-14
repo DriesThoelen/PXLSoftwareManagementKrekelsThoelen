@@ -11,7 +11,7 @@ namespace Calculator
     {
         private OperationExtractor operationExtractor = new OperationExtractor();
         private AddOperator addOperator = new AddOperator();
-        private SubstractOperator substractOperator = new SubstractOperator();
+        private SubtractOperator substractOperator = new SubtractOperator();
         private MultiplyOperator multiplyOperator = new MultiplyOperator();
         private DivisionOperator divisionOperator = new DivisionOperator();
 
@@ -43,7 +43,7 @@ namespace Calculator
                     }
                     case '-':
                     {
-                        result += substractOperator.Substract(new[] { operation.Operant1, operation.Operant2 });
+                        result += substractOperator.Subtract(new[] { operation.Operant1, operation.Operant2 });
                         break;
                     }
                 }
