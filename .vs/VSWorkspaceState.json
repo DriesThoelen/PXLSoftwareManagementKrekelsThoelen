@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Local settings (.vs)\\WPFCore",
+    "\\Local settings (.vs)\\WPFCore\\v16\\Server",
+    "\\WPFCore"
   ],
+  "SelectedNode": "\\Local settings (.vs)",
   "PreviewInSolutionExplorer": false
 }
