@@ -34,5 +34,5 @@ steps:
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Build.SourcesDirectory)\bin\$(buildConfiguration)\'
+    targetPath: 'Calculator\bin\$(buildConfiguration)\'
     artifact: 'Application'
