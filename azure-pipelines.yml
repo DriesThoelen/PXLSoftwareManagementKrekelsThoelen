@@ -29,9 +29,11 @@ steps:
 
 - task: VSTest@2
   inputs:
+    testSelector: 'testAssemblies'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.0'
+
 
 - task: PublishPipelineArtifact@1
   inputs:
