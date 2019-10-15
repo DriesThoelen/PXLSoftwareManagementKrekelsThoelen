@@ -37,8 +37,14 @@ steps:
 - task: reportgenerator@4
   inputs:
     reports: 'TestResults\*\coverage.cobertura.xml'
-    targetdir: 'TestResults\coveragereport'
+    targetdir: 'TestResults\report'
     reporttypes: 'HtmlInline_AzurePipelines;Cobertura;Badges'
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)\TestResults\report\Cobertura.xml'
+    reportDirectory: '$(Build.SourcesDirectory)\TestResults\report'
 
 - task: PublishPipelineArtifact@1
   inputs:
