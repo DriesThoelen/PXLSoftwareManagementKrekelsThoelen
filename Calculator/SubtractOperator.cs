@@ -20,5 +20,6 @@ namespace Calculator
         }
 
         public double Calculate(params double[] operands) => Subtract(operands);
+        public char Symbol { get; } = '-';
     }
 }

@@ -20,5 +20,6 @@ namespace Calculator
         }
 
         public double Calculate(params double[] operands) => Add(operands);
+        public char Symbol { get; } = '+';
     }
 }

@@ -15,10 +15,11 @@ namespace Calculator
             {
                 result /= arg;
             }
-
+            
             return result;
         }
 
         public double Calculate(params double[] operands) => Divide(operands);
+        public char Symbol { get; } = '/';
     }
 }
