@@ -7,6 +7,11 @@ namespace CalculatorTests
     public class CalculatorTest
     {
         [TestCase(1.0, 2.0)]
+        [TestCase(1.1, 2.0)]
+        [TestCase(1.0, 2.2)]
+        [TestCase(1.1, 2.2)]
+        [TestCase(1.0, 0.0)]
+        [TestCase(0.0, 2.0)]
         [TestCase(1.0, 2.0, 3.0)]
         [TestCase(1.0, 2.0, 3.0, 4.0)]
         [TestCase(1.0, 2.0, 3.0, 4.0, 5.0)]
@@ -22,22 +27,27 @@ namespace CalculatorTests
         }
 
         [TestCase(2.0, 1.0)]
+        [TestCase(2.0, 1.1)]
+        [TestCase(2.2, 1.0)]
+        [TestCase(2.2, 1.1)]
+        [TestCase(0.0, 1.0)]
+        [TestCase(2.0, 0.0)]
         [TestCase(3.0, 2.0, 1.0)]
         [TestCase(4.0, 3.0, 2.0, 1.0)]
         [TestCase(5.0, 4.0, 3.0, 2.0, 1.0)]
-        public void ShouldSubstractTwoOrMoreNumbersCorrectly(params double[] args)
+        public void ShouldSubtractTwoOrMoreNumbersCorrectly(params double[] args)
         {
             //Arrange
             Calculator.SubtractOperator sut = new Calculator.SubtractOperator();
             //Act
             double result = sut.Subtract(args);
             //Assert
-            double[] substractors = args.Skip(1).ToArray();
+            double[] subtractors = args.Skip(1).ToArray();
             double[] number = { args[0] };
-            while (substractors.Length > 0)
+            while (subtractors.Length > 0)
             {
-                number[0] = number.Zip(substractors, (n1, n2) => n1 - n2).First();
-                substractors = substractors.Skip(1).ToArray();
+                number[0] = number.Zip(subtractors, (n1, n2) => n1 - n2).First();
+                subtractors = subtractors.Skip(1).ToArray();
             }
 
             double expected = number[0];
@@ -45,6 +55,12 @@ namespace CalculatorTests
         }
 
         [TestCase(2.0, 1.0)]
+        [TestCase(2.0, 1.1)]
+        [TestCase(2.2, 1.0)]
+        [TestCase(2.2, 1.1)]
+        [TestCase(2.0, 0.0)]
+        [TestCase(0.0, 1.0)]
+        [TestCase(0.0, 0.0)]
         [TestCase(3.0, 2.0, 1.0)]
         [TestCase(4.0, 3.0, 2.0, 1.0)]
         [TestCase(5.0, 4.0, 3.0, 2.0, 1.0)]
@@ -68,6 +84,11 @@ namespace CalculatorTests
         }
 
         [TestCase(2.0, 1.0)]
+        [TestCase(2.0, 1.1)]
+        [TestCase(2.2, 1.0)]
+        [TestCase(2.2, 1.1)]
+        [TestCase(0.0, 1.0)]
+        [TestCase(2.0, 0.001)]
         [TestCase(3.0, 2.0, 1.0)]
         [TestCase(4.0, 3.0, 2.0, 1.0)]
         [TestCase(5.0, 4.0, 3.0, 2.0, 1.0)]
