@@ -37,6 +37,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.0'
+    codeCoverageEnabled: true
 
 - task: PublishPipelineArtifact@1
   inputs:
