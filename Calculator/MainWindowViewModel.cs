@@ -17,7 +17,7 @@ namespace Calculator
         private List<Double> subtractDoubles = new List<Double>();
         private List<Double> multiplyDoubles = new List<Double>();
         private List<Double> divideDoubles = new List<Double>();
-        private List<String> allOperatorSigns = new List<String>();
+        private List<char> allOperatorSigns = new List<char>();
         private StringBuilder operantBuffer = new StringBuilder();
 
         private CalculatingUnit _calculator = new CalculatingUnit();
@@ -33,18 +33,23 @@ namespace Calculator
 
         string operationString = "";
 
-        private Regex _regEx = new Regex(@"\d+" + "[" + Regex.Escape("+") + "\\-" + Regex.Escape("*") + Regex.Escape("/") + "]+" + @"\d+");
+        private Regex _regEx = new Regex(@"\d+" + "[" + 
+                                         "\\" + AddOperator.SYMBOL + 
+                                         "\\" + SubtractOperator.SYMBOL + 
+                                         "\\" + MultiplyOperator.SYMBOL + 
+                                         "\\" + DivisionOperator.SYMBOL + 
+                                         "]+" + @"\d+");
 
         public MainWindowViewModel()
         {
-            AddNumberCommand = new RelayCommand<string>((key) =>
+            AddNumberCommand = new RelayCommand<char>((key) =>
             {
                 // Add the key to the input string.
                 OperationString += key;
                 operantBuffer.Append(key);
             });
 
-            AddOperationSignCommand = new RelayCommand<string>((key) =>
+            AddOperationSignCommand = new RelayCommand<char>((key) =>
             {
                 ParseDoubleAndOrderByOperation(key, false);
 
@@ -117,22 +122,22 @@ namespace Calculator
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void ParseDoubleAndOrderByOperation(string key, bool finalCalculation)
+        private void ParseDoubleAndOrderByOperation(char key, bool finalCalculation)
         {
             switch (key)
             {
-                case "*":
+                case MultiplyOperator.SYMBOL:
                     {
-                        if (operationString.Contains('+') || operationString.Contains('-'))
+                        if (operationString.Contains(AddOperator.SYMBOL) || operationString.Contains(SubtractOperator.SYMBOL))
                         {
-                            if (operationString.Contains('+'))
+                            if (operationString.Contains(AddOperator.SYMBOL))
                             {
-                                CalculateImmediateResult(addDoubles, "*", finalCalculation, key);
+                                CalculateImmediateResult(addDoubles, MultiplyOperator.SYMBOL, finalCalculation, key);
                             }
 
-                            if (operationString.Contains('-'))
+                            if (operationString.Contains(SubtractOperator.SYMBOL))
                             {
-                                CalculateImmediateResult(subtractDoubles, "*", finalCalculation, key);
+                                CalculateImmediateResult(subtractDoubles, MultiplyOperator.SYMBOL, finalCalculation, key);
                             }
 
                         }
@@ -143,18 +148,18 @@ namespace Calculator
 
                         break;
                     }
-                case "/":
+                case DivisionOperator.SYMBOL:
                     {
-                        if (operationString.Contains('+') || operationString.Contains('-'))
+                        if (operationString.Contains(AddOperator.SYMBOL) || operationString.Contains(SubtractOperator.SYMBOL))
                         {
-                            if (operationString.Contains("+"))
+                            if (operationString.Contains(AddOperator.SYMBOL))
                             {
-                                CalculateImmediateResult(addDoubles, "/", finalCalculation, key);
+                                CalculateImmediateResult(addDoubles, DivisionOperator.SYMBOL, finalCalculation, key);
                             }
 
-                            if (operationString.Contains('-'))
+                            if (operationString.Contains(SubtractOperator.SYMBOL))
                             {
-                                CalculateImmediateResult(subtractDoubles, "/", finalCalculation, key);
+                                CalculateImmediateResult(subtractDoubles, DivisionOperator.SYMBOL, finalCalculation, key);
                             }
                         }
                         else
@@ -164,19 +169,19 @@ namespace Calculator
 
                         break;
                     }
-                case "+":
+                case AddOperator.SYMBOL:
                     {
-                        if (operationString.Contains('*') || operationString.Contains('/'))
+                        if (operationString.Contains(MultiplyOperator.SYMBOL) || operationString.Contains(DivisionOperator.SYMBOL))
                         {
-                            if (operationString.Contains('*'))
+                            if (operationString.Contains(MultiplyOperator.SYMBOL))
                             {
                                 multiplyDoubles.Add(Double.Parse(operantBuffer.ToString()));
-                                CalculateImmediateResult(addDoubles, "*", finalCalculation, key);
+                                CalculateImmediateResult(addDoubles, MultiplyOperator.SYMBOL, finalCalculation, key);
                             }
-                            if (operationString.Contains('/'))
+                            if (operationString.Contains(DivisionOperator.SYMBOL))
                             {
                                 divideDoubles.Add(Double.Parse(operantBuffer.ToString()));
-                                CalculateImmediateResult(addDoubles, "/", finalCalculation, key);
+                                CalculateImmediateResult(addDoubles, DivisionOperator.SYMBOL, finalCalculation, key);
                             }
                         }
                         else
@@ -185,19 +190,19 @@ namespace Calculator
                         }
                         break;
                     }
-                case "-":
+                case SubtractOperator.SYMBOL:
                     {
-                        if (operationString.Contains('*') || operationString.Contains('/'))
+                        if (operationString.Contains(MultiplyOperator.SYMBOL) || operationString.Contains(DivisionOperator.SYMBOL))
                         {
-                            if (operationString.Contains('*'))
+                            if (operationString.Contains(MultiplyOperator.SYMBOL))
                             {
                                 multiplyDoubles.Add(Double.Parse(operantBuffer.ToString()));
-                                CalculateImmediateResult(subtractDoubles, "*", finalCalculation, key);
+                                CalculateImmediateResult(subtractDoubles, MultiplyOperator.SYMBOL, finalCalculation, key);
                             }
-                            if (operationString.Contains('/'))
+                            if (operationString.Contains(DivisionOperator.SYMBOL))
                             {
                                 divideDoubles.Add(Double.Parse(operantBuffer.ToString()));
-                                CalculateImmediateResult(subtractDoubles, "/", finalCalculation, key);
+                                CalculateImmediateResult(subtractDoubles, DivisionOperator.SYMBOL, finalCalculation, key);
                             }
                         }
                         else
@@ -208,55 +213,55 @@ namespace Calculator
                     }
             }
         }
-        private void CalculateImmediateResult(List<double> output, String operatorSign, bool finalCalculation, String caller)
+        private void CalculateImmediateResult(List<double> output, char operatorSign, bool finalCalculation, char caller)
         {
             double intermediateResult = 0.0;
 
-            if (caller.Equals("+") || caller.Equals("-"))
+            if (caller.Equals(AddOperator.SYMBOL) || caller.Equals(SubtractOperator.SYMBOL))
             {
-                if (operationString.Contains('*'))
+                if (operationString.Contains(MultiplyOperator.SYMBOL))
                 {
-                    intermediateResult = _calculator.IntermediateCalculate("*", multiplyDoubles.ToArray());
+                    intermediateResult = _calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, multiplyDoubles.ToArray());
                     multiplyDoubles.Clear();
                 }
 
-                if (operationString.Contains('/'))
+                if (operationString.Contains(DivisionOperator.SYMBOL))
                 {
-                    intermediateResult = _calculator.IntermediateCalculate("/", divideDoubles.ToArray());
+                    intermediateResult = _calculator.IntermediateCalculate(DivisionOperator.SYMBOL, divideDoubles.ToArray());
                     divideDoubles.Clear();
                 }
             }
 
             if (finalCalculation)
             {
-                if (caller.Equals("*") || caller.Equals("/"))
+                if (caller.Equals(MultiplyOperator.SYMBOL) || caller.Equals(DivisionOperator.SYMBOL))
                 {
-                    if (operationString.Contains("+"))
+                    if (operationString.Contains(AddOperator.SYMBOL))
                     {
-                        if (operatorSign.Equals("*") && multiplyDoubles.Count > 0)
+                        if (operatorSign.Equals(MultiplyOperator.SYMBOL) && multiplyDoubles.Count > 0)
                         {
-                            intermediateResult = _calculator.IntermediateCalculate("*", multiplyDoubles.ToArray());
+                            intermediateResult = _calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, multiplyDoubles.ToArray());
                             multiplyDoubles.Clear();
                         }
 
-                        if (operatorSign.Equals("/") && divideDoubles.Count > 0)
+                        if (operatorSign.Equals(DivisionOperator.SYMBOL) && divideDoubles.Count > 0)
                         {
-                            intermediateResult = _calculator.IntermediateCalculate("/", divideDoubles.ToArray());
+                            intermediateResult = _calculator.IntermediateCalculate(DivisionOperator.SYMBOL, divideDoubles.ToArray());
                             divideDoubles.Clear();
                         }
                     }
 
-                    if (operationString.Contains("-"))
+                    if (operationString.Contains(SubtractOperator.SYMBOL))
                     {
-                        if (operatorSign.Equals("*") && multiplyDoubles.Count > 0)
+                        if (operatorSign.Equals(MultiplyOperator.SYMBOL) && multiplyDoubles.Count > 0)
                         {
-                            intermediateResult = _calculator.IntermediateCalculate("*", multiplyDoubles.ToArray());
+                            intermediateResult = _calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, multiplyDoubles.ToArray());
                             multiplyDoubles.Clear();
                         }
 
-                        if (operatorSign.Equals("/") && divideDoubles.Count > 0)
+                        if (operatorSign.Equals(DivisionOperator.SYMBOL) && divideDoubles.Count > 0)
                         {
-                            intermediateResult = _calculator.IntermediateCalculate("/", divideDoubles.ToArray());
+                            intermediateResult = _calculator.IntermediateCalculate(DivisionOperator.SYMBOL, divideDoubles.ToArray());
                             divideDoubles.Clear();
                         }
                     }

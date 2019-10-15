@@ -7,6 +7,8 @@ namespace Calculator
 {
     public class DivisionOperator : IOperator
     {
+        public const char SYMBOL = '/';
+
         public double Divide(params double[] args)
         {
             double result = args[0];
@@ -20,6 +22,6 @@ namespace Calculator
         }
 
         public double Calculate(params double[] operands) => Divide(operands);
-        public char Symbol { get; } = '/';
+        public char Symbol { get; } = SYMBOL;
     }
 }

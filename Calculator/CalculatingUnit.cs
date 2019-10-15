@@ -11,12 +11,12 @@ namespace Calculator
     {
         //private OperationExtractor operationExtractor = new OperationExtractor();
         private AddOperator addOperator = new AddOperator();
-        private SubtractOperator substractOperator = new SubtractOperator();
+        private SubtractOperator subtractOperator = new SubtractOperator();
         private MultiplyOperator multiplyOperator = new MultiplyOperator();
         private DivisionOperator divisionOperator = new DivisionOperator();
 
 
-        public double Calculate(double[] addOperations, double[] substractOperations, double[] multiplyOperations, double[] divisionOperations)
+        public double Calculate(double[] addOperations, double[] subtractOperations, double[] multiplyOperations, double[] divisionOperations)
         {
             double result = 0.0;
 
@@ -26,24 +26,24 @@ namespace Calculator
             {
                 switch (operation.OperatorSign)
                 {
-                    case '*':
+                    case MultiplyOperator.SYMBOL:
                     {
                         result += multiplyOperator.Multiply(new[] { operation.Operant1, operation.Operant2 });
                         break;
                     }
-                    case '/':
+                    case DivisionOperator.SYMBOL:
                     {
                         result += divisionOperator.Divide(new[] { operation.Operant1, operation.Operant2 });
                         break;
                     }
-                    case '+':
+                    case AddOperator.SYMBOL:
                     {
-                        result += addOperator.Add(new []{ operation.Operant1, operation.Operant2 });
+                        result += addOperator.Add(new [] { operation.Operant1, operation.Operant2 });
                         break;
                     }
-                    case '-':
+                    case SubtractOperator.SYMBOL:
                     {
-                        result += substractOperator.Subtract(new[] { operation.Operant1, operation.Operant2 });
+                        result += subtractOperator.Subtract(new[] { operation.Operant1, operation.Operant2 });
                         break;
                     }
                 }
@@ -64,24 +64,24 @@ namespace Calculator
                 result += addOperator.Add(addOperations);
             }
 
-            if (substractOperations.Length > 0)
+            if (subtractOperations.Length > 0)
             {
-                result -= substractOperator.Subtract(substractOperations);
+                result -= subtractOperator.Subtract(subtractOperations);
             }
 
             return result;
         }
 
-        public double IntermediateCalculate(string operationSign, double[] operations)
+        public double IntermediateCalculate(char operationSign, double[] operations)
         {
             double intermediateResult = 0.0;
 
-            if (operationSign.Equals("*"))
+            if (operationSign.Equals(MultiplyOperator.SYMBOL))
             {
                 intermediateResult += multiplyOperator.Multiply(operations);
             }
 
-            if (operationSign.Equals("/"))
+            if (operationSign.Equals(DivisionOperator.SYMBOL))
             {
                 intermediateResult += divisionOperator.Divide(operations);
             }

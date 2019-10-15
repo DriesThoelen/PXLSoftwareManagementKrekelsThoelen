@@ -7,6 +7,7 @@ namespace Calculator
 {
     public class SubtractOperator : IOperator
     {
+        public const char SYMBOL = '-';
         public double Subtract(params double[] args)
         {
             double result = args[0];
@@ -20,6 +21,6 @@ namespace Calculator
         }
 
         public double Calculate(params double[] operands) => Subtract(operands);
-        public char Symbol { get; } = '-';
+        public char Symbol { get; } = SYMBOL;
     }
 }

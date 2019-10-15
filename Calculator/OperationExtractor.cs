@@ -97,13 +97,13 @@ namespace Calculator
 
             switch (operatorChar)
             {
-                case '*':
-                case '/':
+                case MultiplyOperator.SYMBOL:
+                case DivisionOperator.SYMBOL:
                     sortedCharArray = (unsortedCharArray.Take(operatorCharIndex)).Concat(secondPart).ToArray();
                     break;
-                case '+':
-                case '-':
-                    if (unsortedCharArray.Contains('*') || unsortedCharArray.Contains('/'))
+                case AddOperator.SYMBOL:
+                case SubtractOperator.SYMBOL:
+                    if (unsortedCharArray.Contains(MultiplyOperator.SYMBOL) || unsortedCharArray.Contains(DivisionOperator.SYMBOL))
                     {
                         char[] firstPart = unsortedCharArray.SkipWhile(c => char.IsDigit(c)).Skip(1).ToArray();
                         sortedCharArray = firstPart.Concat(unsortedCharArray.Except(firstPart).Reverse()).ToArray();
