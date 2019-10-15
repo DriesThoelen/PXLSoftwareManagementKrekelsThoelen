@@ -31,7 +31,7 @@ steps:
   inputs:
     command: 'test'
     projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "XPlat Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --collect "XPlat Code Coverage"'
 
 - task: PublishPipelineArtifact@1
   inputs:
