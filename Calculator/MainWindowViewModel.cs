@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -12,33 +12,33 @@ using JetBrains.Annotations;
 
 namespace Calculator
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
-        private List<Double> addDoubles = new List<Double>();
-        private List<Double> subtractDoubles = new List<Double>();
-        private List<Double> multiplyDoubles = new List<Double>();
-        private List<Double> divideDoubles = new List<Double>();
-        private List<char> allOperatorSigns = new List<char>();
-        private StringBuilder operantBuffer = new StringBuilder();
+        private readonly List<double> addDoubles = new List<double>();
+        private readonly List<double> subtractDoubles = new List<double>();
+        private readonly List<double> multiplyDoubles = new List<double>();
+        private readonly List<double> divideDoubles = new List<double>();
+        private readonly List<char> allOperatorSigns = new List<char>();
+        private readonly StringBuilder operandBuffer = new StringBuilder();
 
-        private CalculatingUnit _calculator = new CalculatingUnit();
-        public ICommand AddNumberCommand { protected set; get; }
+        private readonly CalculatingUnit calculator = new CalculatingUnit();
+        public ICommand AddNumberCommand { get; }
 
-        public ICommand AddOperationSignCommand { protected set; get; }
+        public ICommand AddOperationSignCommand { get; }
 
-        public ICommand DeleteNumberCommand { protected set; get; }
+        public ICommand DeleteNumberCommand { get; }
 
-        public ICommand ClearCommand { protected set; get; }
+        public ICommand ClearCommand { get; }
 
-        public ICommand CalculateCommand { protected set; get; }
+        public ICommand CalculateCommand { get; }
 
         string operationString = "";
 
-        private Regex _regEx = new Regex(@"\d+" + "[" + 
-                                         "\\" + AddOperator.SYMBOL + 
-                                         "\\" + SubtractOperator.SYMBOL + 
-                                         "\\" + MultiplyOperator.SYMBOL + 
-                                         "\\" + DivisionOperator.SYMBOL + 
+        private readonly Regex regEx = new Regex(@"\d+" + "[" +
+                                         "\\" + AddOperator.SYMBOL +
+                                         "\\" + SubtractOperator.SYMBOL +
+                                         "\\" + MultiplyOperator.SYMBOL +
+                                         "\\" + DivisionOperator.SYMBOL +
                                          "]+" + @"\d+");
 
         public MainWindowViewModel()
@@ -47,7 +47,7 @@ namespace Calculator
             {
                 // Add the key to the input string.
                 OperationString += key;
-                operantBuffer.Append(key);
+                operandBuffer.Append(key);
             });
 
             AddOperationSignCommand = new RelayCommand<char>((key) =>
@@ -55,7 +55,7 @@ namespace Calculator
                 ParseDoubleAndOrderByOperation(key, false);
 
                 allOperatorSigns.Add(key);
-                operantBuffer.Clear();
+                operandBuffer.Clear();
 
                 // Add the key to the input string.
                 OperationString += key;
@@ -64,61 +64,54 @@ namespace Calculator
             DeleteNumberCommand = new RelayCommand(() =>
                 {
                     // Strip a character from the input string.
-                    OperationString = OperationString.Substring(0, OperationString.Length - 1);
+                    OperationString = OperationString[..^1];
                 },
-                () =>
-                {
-                    // Return true if there's something to delete.
-                    return OperationString.Length > 0;
-                });
+                () => OperationString.Length > 0);
 
             ClearCommand = new RelayCommand(() =>
                 {
                     // Clear the input string.
-                    OperationString = String.Empty;
+                    OperationString = string.Empty;
                 },
-                () =>
-                {
-                    // Return true if there's something to clear.
-                    return OperationString.Length > 0;
-                });
+                () => OperationString.Length > 0);
 
             CalculateCommand = new RelayCommand(() =>
                 {
                     ParseDoubleAndOrderByOperation(allOperatorSigns.Last(), true);
-                    operantBuffer.Clear();
+                    operandBuffer.Clear();
 
-                    OperationString = _calculator.Calculate(addDoubles.ToArray(), subtractDoubles.ToArray(), multiplyDoubles.ToArray(), divideDoubles.ToArray()).ToString();
+                    OperationString = calculator.Calculate(addDoubles.ToArray(), subtractDoubles.ToArray(), multiplyDoubles.ToArray(), divideDoubles.ToArray()).ToString(CultureInfo.CurrentCulture);
                     addDoubles.Clear();
                     subtractDoubles.Clear();
                     multiplyDoubles.Clear();
                     divideDoubles.Clear();
                     allOperatorSigns.Clear();
                 },
-                () => { return _regEx.IsMatch(OperationString); });
+                () => regEx.IsMatch(OperationString));
         }
 
         public string OperationString
         {
-            protected set
+            private set
             {
-                if (operationString != value)
+                if (operationString == value)
                 {
-                    operationString = value;
-                    OnPropertyChanged(nameof(OperationString));
-
-                    // Perhaps the delete button must be enabled/disabled.
-                    ((RelayCommand)DeleteNumberCommand).CanExecute(true);
+                    return;
                 }
+                operationString = value;
+                OnPropertyChanged(nameof(OperationString));
+
+                // Perhaps the delete button must be enabled/disabled.
+                ((RelayCommand)DeleteNumberCommand).CanExecute(true);
             }
 
-            get { return operationString; }
+            get => operationString;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -144,7 +137,7 @@ namespace Calculator
                         }
                         else
                         {
-                            multiplyDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                            multiplyDoubles.Add(double.Parse(operandBuffer.ToString()));
                         }
 
                         break;
@@ -165,7 +158,7 @@ namespace Calculator
                         }
                         else
                         {
-                            divideDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                            divideDoubles.Add(double.Parse(operandBuffer.ToString()));
                         }
 
                         break;
@@ -176,18 +169,18 @@ namespace Calculator
                         {
                             if (operationString.Contains(MultiplyOperator.SYMBOL))
                             {
-                                multiplyDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                                multiplyDoubles.Add(double.Parse(operandBuffer.ToString()));
                                 CalculateImmediateResult(addDoubles, MultiplyOperator.SYMBOL, finalCalculation, key);
                             }
                             if (operationString.Contains(DivisionOperator.SYMBOL))
                             {
-                                divideDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                                divideDoubles.Add(double.Parse(operandBuffer.ToString()));
                                 CalculateImmediateResult(addDoubles, DivisionOperator.SYMBOL, finalCalculation, key);
                             }
                         }
                         else
                         {
-                            addDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                            addDoubles.Add(double.Parse(operandBuffer.ToString()));
                         }
                         break;
                     }
@@ -197,38 +190,38 @@ namespace Calculator
                         {
                             if (operationString.Contains(MultiplyOperator.SYMBOL))
                             {
-                                multiplyDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                                multiplyDoubles.Add(double.Parse(operandBuffer.ToString()));
                                 CalculateImmediateResult(subtractDoubles, MultiplyOperator.SYMBOL, finalCalculation, key);
                             }
                             if (operationString.Contains(DivisionOperator.SYMBOL))
                             {
-                                divideDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                                divideDoubles.Add(double.Parse(operandBuffer.ToString()));
                                 CalculateImmediateResult(subtractDoubles, DivisionOperator.SYMBOL, finalCalculation, key);
                             }
                         }
                         else
                         {
-                            subtractDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                            subtractDoubles.Add(double.Parse(operandBuffer.ToString()));
                         }
                         break;
                     }
             }
         }
-        private void CalculateImmediateResult(List<double> output, char operatorSign, bool finalCalculation, char caller)
+        private void CalculateImmediateResult(ICollection<double> output, char operatorSign, bool finalCalculation, char caller)
         {
-            double intermediateResult = 0.0;
+            var intermediateResult = 0.0;
 
             if (caller.Equals(AddOperator.SYMBOL) || caller.Equals(SubtractOperator.SYMBOL))
             {
                 if (operationString.Contains(MultiplyOperator.SYMBOL))
                 {
-                    intermediateResult = _calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, multiplyDoubles.ToArray());
+                    intermediateResult = calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, multiplyDoubles.ToArray());
                     multiplyDoubles.Clear();
                 }
 
                 if (operationString.Contains(DivisionOperator.SYMBOL))
                 {
-                    intermediateResult = _calculator.IntermediateCalculate(DivisionOperator.SYMBOL, divideDoubles.ToArray());
+                    intermediateResult = calculator.IntermediateCalculate(DivisionOperator.SYMBOL, divideDoubles.ToArray());
                     divideDoubles.Clear();
                 }
             }
@@ -239,31 +232,31 @@ namespace Calculator
                 {
                     if (operationString.Contains(AddOperator.SYMBOL))
                     {
-                        if (operatorSign.Equals(MultiplyOperator.SYMBOL) && multiplyDoubles.Count > 0)
+                        switch (operatorSign)
                         {
-                            intermediateResult = _calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, multiplyDoubles.ToArray());
-                            multiplyDoubles.Clear();
-                        }
-
-                        if (operatorSign.Equals(DivisionOperator.SYMBOL) && divideDoubles.Count > 0)
-                        {
-                            intermediateResult = _calculator.IntermediateCalculate(DivisionOperator.SYMBOL, divideDoubles.ToArray());
-                            divideDoubles.Clear();
+                            case MultiplyOperator.SYMBOL when multiplyDoubles.Count > 0:
+                                intermediateResult = calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, multiplyDoubles.ToArray());
+                                multiplyDoubles.Clear();
+                                break;
+                            case DivisionOperator.SYMBOL when divideDoubles.Count > 0:
+                                intermediateResult = calculator.IntermediateCalculate(DivisionOperator.SYMBOL, divideDoubles.ToArray());
+                                divideDoubles.Clear();
+                                break;
                         }
                     }
 
                     if (operationString.Contains(SubtractOperator.SYMBOL))
                     {
-                        if (operatorSign.Equals(MultiplyOperator.SYMBOL) && multiplyDoubles.Count > 0)
+                        switch (operatorSign)
                         {
-                            intermediateResult = _calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, multiplyDoubles.ToArray());
-                            multiplyDoubles.Clear();
-                        }
-
-                        if (operatorSign.Equals(DivisionOperator.SYMBOL) && divideDoubles.Count > 0)
-                        {
-                            intermediateResult = _calculator.IntermediateCalculate(DivisionOperator.SYMBOL, divideDoubles.ToArray());
-                            divideDoubles.Clear();
+                            case MultiplyOperator.SYMBOL when multiplyDoubles.Count > 0:
+                                intermediateResult = calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, multiplyDoubles.ToArray());
+                                multiplyDoubles.Clear();
+                                break;
+                            case DivisionOperator.SYMBOL when divideDoubles.Count > 0:
+                                intermediateResult = calculator.IntermediateCalculate(DivisionOperator.SYMBOL, divideDoubles.ToArray());
+                                divideDoubles.Clear();
+                                break;
                         }
                     }
                 }

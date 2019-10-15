@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Calculator.Operators;
@@ -8,32 +7,33 @@ namespace Calculator
 {
     public class OperationExtractor
     {
-        private List<Operation> operations = new List<Operation>();
-        private StringBuilder operantBuilder = new StringBuilder();
+        private readonly List<Operation> operations = new List<Operation>();
+        private readonly StringBuilder operandBuilder = new StringBuilder();
         private StringBuilder operationStringBuilder;
-        private double operant1;
-        private double operant2;
+        private double operand1;
+        private double operand2;
+
         public List<Operation> Extract(string operationString)
         {
             operations.Clear();
 
             operationStringBuilder = new StringBuilder(operationString);
-            char[] operationCharArray = SortOnOperatorPriority(operationString.ToCharArray());
+            var operationCharArray = SortOnOperatorPriority(operationString.ToCharArray());
 
             while (operationStringBuilder.Length > 0)
             {
-                operantBuilder.Clear();
+                operandBuilder.Clear();
 
-                operant1 = 0.0;
-                operant2 = 0.0;
+                operand1 = 0.0;
+                operand2 = 0.0;
 
-                char operatorSign = ' ';
+                var operatorSign = ' ';
 
-                for (int i = 0; i < operationCharArray.Length; i++)
+                for (var i = 0; i < operationCharArray.Length; i++)
                 {
-                    if (Char.IsDigit(operationCharArray[i]))
+                    if (char.IsDigit(operationCharArray[i]))
                     {
-                        operantBuilder.Append(operationCharArray[i]);
+                        operandBuilder.Append(operationCharArray[i]);
                         if (operationStringBuilder.Length > 0)
                         {
                             operationStringBuilder.Remove(0, 1);
@@ -43,12 +43,12 @@ namespace Calculator
                     {
                         if (char.IsWhiteSpace(operatorSign))
                         {
-                            if (operantBuilder.Length > 0)
+                            if (operandBuilder.Length > 0)
                             {
-                                operant1 = Double.Parse(operantBuilder.ToString());
+                                operand1 = double.Parse(operandBuilder.ToString());
                             }
 
-                            operantBuilder.Clear();
+                            operandBuilder.Clear();
                             operatorSign = operationCharArray[i];
                             if (operationStringBuilder.Length > 0)
                             {
@@ -57,12 +57,12 @@ namespace Calculator
                         }
                         else
                         {
-                            if (operantBuilder.Length > 0)
+                            if (operandBuilder.Length > 0)
                             {
-                                operant2 = Double.Parse(operantBuilder.ToString());
+                                operand2 = double.Parse(operandBuilder.ToString());
                             }
 
-                            operations.Add(new Operation(operant1, operant2, operatorSign));
+                            operations.Add(new Operation(operand1, operand2, operatorSign));
                             operationCharArray = operationCharArray.Skip(i).ToArray();
                             break;
                         }
@@ -71,13 +71,13 @@ namespace Calculator
 
                 if (operationStringBuilder.Length == 0)
                 {
-                    if (operantBuilder.Length > 0)
+                    if (operandBuilder.Length > 0)
                     {
-                        operant2 = Double.Parse(operantBuilder.ToString());
+                        operand2 = double.Parse(operandBuilder.ToString());
                     }
-                    operantBuilder.Clear();
+                    operandBuilder.Clear();
 
-                    operations.Add(new Operation(operant1, operant2, operatorSign));
+                    operations.Add(new Operation(operand1, operand2, operatorSign));
 
                     break;
                 }
@@ -90,21 +90,21 @@ namespace Calculator
         {
             char[] sortedCharArray = {};
 
-            char operatorChar = unsortedCharArray.SkipWhile(c => char.IsDigit(c)).First();
-            char[] secondPart = unsortedCharArray.SkipWhile(c => char.IsDigit(c)).ToArray();
-            int operatorCharIndex = unsortedCharArray.Length - secondPart.Length;
+            var operatorChar = unsortedCharArray.SkipWhile(char.IsDigit).First();
+            var secondPart = unsortedCharArray.SkipWhile(char.IsDigit).ToArray();
+            var operatorCharIndex = unsortedCharArray.Length - secondPart.Length;
 
             switch (operatorChar)
             {
                 case MultiplyOperator.SYMBOL:
                 case DivisionOperator.SYMBOL:
-                    sortedCharArray = (unsortedCharArray.Take(operatorCharIndex)).Concat(secondPart).ToArray();
+                    sortedCharArray = unsortedCharArray.Take(operatorCharIndex).Concat(secondPart).ToArray();
                     break;
                 case AddOperator.SYMBOL:
                 case SubtractOperator.SYMBOL:
                     if (unsortedCharArray.Contains(MultiplyOperator.SYMBOL) || unsortedCharArray.Contains(DivisionOperator.SYMBOL))
                     {
-                        char[] firstPart = unsortedCharArray.SkipWhile(c => char.IsDigit(c)).Skip(1).ToArray();
+                        var firstPart = unsortedCharArray.SkipWhile(char.IsDigit).Skip(1).ToArray();
                         sortedCharArray = firstPart.Concat(unsortedCharArray.Except(firstPart).Reverse()).ToArray();
                     }
                     else

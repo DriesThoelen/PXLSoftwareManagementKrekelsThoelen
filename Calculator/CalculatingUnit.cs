@@ -5,15 +5,15 @@ namespace Calculator
     public class CalculatingUnit
     {
         //private OperationExtractor operationExtractor = new OperationExtractor();
-        private AddOperator addOperator = new AddOperator();
-        private SubtractOperator subtractOperator = new SubtractOperator();
-        private MultiplyOperator multiplyOperator = new MultiplyOperator();
-        private DivisionOperator divisionOperator = new DivisionOperator();
+        private readonly AddOperator addOperator = new AddOperator();
+        private readonly SubtractOperator subtractOperator = new SubtractOperator();
+        private readonly MultiplyOperator multiplyOperator = new MultiplyOperator();
+        private readonly DivisionOperator divisionOperator = new DivisionOperator();
 
 
         public double Calculate(double[] addOperations, double[] subtractOperations, double[] multiplyOperations, double[] divisionOperations)
         {
-            double result = 0.0;
+            var result = 0.0;
 
             //List<Operation> operations = operationExtractor.Extract(operationString);
 
@@ -69,16 +69,16 @@ namespace Calculator
 
         public double IntermediateCalculate(char operationSign, double[] operations)
         {
-            double intermediateResult = 0.0;
+            var intermediateResult = 0.0;
 
-            if (operationSign.Equals(MultiplyOperator.SYMBOL))
+            switch (operationSign)
             {
-                intermediateResult += multiplyOperator.Multiply(operations);
-            }
-
-            if (operationSign.Equals(DivisionOperator.SYMBOL))
-            {
-                intermediateResult += divisionOperator.Divide(operations);
+                case MultiplyOperator.SYMBOL:
+                    intermediateResult += multiplyOperator.Multiply(operations);
+                    break;
+                case DivisionOperator.SYMBOL:
+                    intermediateResult += divisionOperator.Divide(operations);
+                    break;
             }
 
             return intermediateResult;
