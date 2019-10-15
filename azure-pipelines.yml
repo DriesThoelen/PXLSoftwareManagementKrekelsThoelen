@@ -30,10 +30,13 @@ steps:
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.0'
-
 
 - task: PublishPipelineArtifact@1
   inputs:
