@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Calculator
 {
-    public class SubtractOperator
+    public class SubtractOperator : IOperator
     {
         public double Subtract(params double[] args)
         {
@@ -18,5 +18,7 @@ namespace Calculator
 
             return result;
         }
+
+        public double Calculate(params double[] operands) => Subtract(operands);
     }
 }
