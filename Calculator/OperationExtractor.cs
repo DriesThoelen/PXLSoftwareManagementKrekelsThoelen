@@ -19,7 +19,7 @@ namespace Calculator
             operations.Clear();
 
             operationStringBuilder = new StringBuilder(operationString);
-            char[] operationCharArray = operationString.ToCharArray();
+            char[] operationCharArray = SortOnOperatorPriority(operationString.ToCharArray());
 
             while (operationStringBuilder.Length > 0)
             {
@@ -85,6 +85,38 @@ namespace Calculator
             }
 
             return operations;
-        } 
+        }
+
+        private char[] SortOnOperatorPriority(char[] unsortedCharArray)
+        {
+            char[] sortedCharArray = {};
+
+            char operatorChar = unsortedCharArray.SkipWhile(c => char.IsDigit(c)).First();
+            char[] secondPart = unsortedCharArray.SkipWhile(c => char.IsDigit(c)).ToArray();
+            int operatorCharIndex = unsortedCharArray.Length - secondPart.Length;
+
+            switch (operatorChar)
+            {
+                case '*':
+                case '/':
+                    sortedCharArray = (unsortedCharArray.Take(operatorCharIndex)).Concat(secondPart).ToArray();
+                    break;
+                case '+':
+                case '-':
+                    if (unsortedCharArray.Contains('*') || unsortedCharArray.Contains('/'))
+                    {
+                        char[] firstPart = unsortedCharArray.SkipWhile(c => char.IsDigit(c)).Skip(1).ToArray();
+                        sortedCharArray = firstPart.Concat(unsortedCharArray.Except(firstPart).Reverse()).ToArray();
+                    }
+                    else
+                    {
+                        sortedCharArray = unsortedCharArray;
+                    }
+                    break;
+
+            }
+
+            return sortedCharArray;
+        }
     }
 }

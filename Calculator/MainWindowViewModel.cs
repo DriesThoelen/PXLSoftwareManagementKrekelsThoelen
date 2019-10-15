@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Calculator;
 using GalaSoft.MvvmLight.CommandWpf;
 using JetBrains.Annotations;
 
@@ -14,8 +15,17 @@ namespace Calculator
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        private List<Double> addDoubles = new List<Double>();
+        private List<Double> subtractDoubles = new List<Double>();
+        private List<Double> multiplyDoubles = new List<Double>();
+        private List<Double> divideDoubles = new List<Double>();
+        private List<String> allOperatorSigns = new List<String>();
+        private StringBuilder operantBuffer = new StringBuilder();
+
         private CalculatingUnit _calculator = new CalculatingUnit();
         public ICommand AddNumberCommand { protected set; get; }
+
+        public ICommand AddOperationSignCommand { protected set; get; }
 
         public ICommand DeleteNumberCommand { protected set; get; }
 
@@ -31,6 +41,18 @@ namespace Calculator
         {
             AddNumberCommand = new RelayCommand<string>((key) =>
             {
+                // Add the key to the input string.
+                OperationString += key;
+                operantBuffer.Append(key);
+            });
+
+            AddOperationSignCommand = new RelayCommand<string>((key) =>
+            {
+                ParseDoubleAndOrderByOperation(key, false);
+
+                allOperatorSigns.Add(key);
+                operantBuffer.Clear();
+
                 // Add the key to the input string.
                 OperationString += key;
             });
@@ -59,7 +81,15 @@ namespace Calculator
 
             CalculateCommand = new RelayCommand(() =>
                 {
-                    OperationString = _calculator.Calculate(OperationString).ToString();
+                    ParseDoubleAndOrderByOperation(allOperatorSigns.Last(), true);
+                    operantBuffer.Clear();
+
+                    OperationString = _calculator.Calculate(addDoubles.ToArray(), subtractDoubles.ToArray(), multiplyDoubles.ToArray(), divideDoubles.ToArray()).ToString();
+                    addDoubles.Clear();
+                    subtractDoubles.Clear();
+                    multiplyDoubles.Clear();
+                    divideDoubles.Clear();
+                    allOperatorSigns.Clear();
                 },
                 () => { return _regEx.IsMatch(OperationString); });
         }
@@ -87,6 +117,155 @@ namespace Calculator
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void ParseDoubleAndOrderByOperation(string key, bool finalCalculation)
+        {
+            switch (key)
+            {
+                case "*":
+                    {
+                        if (operationString.Contains('+') || operationString.Contains('-'))
+                        {
+                            if (operationString.Contains('+'))
+                            {
+                                CalculateImmediateResult(addDoubles, "*", finalCalculation, key);
+                            }
+
+                            if (operationString.Contains('-'))
+                            {
+                                CalculateImmediateResult(subtractDoubles, "*", finalCalculation, key);
+                            }
+
+                        }
+                        else
+                        {
+                            multiplyDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                        }
+
+                        break;
+                    }
+                case "/":
+                    {
+                        if (operationString.Contains('+') || operationString.Contains('-'))
+                        {
+                            if (operationString.Contains("+"))
+                            {
+                                CalculateImmediateResult(addDoubles, "/", finalCalculation, key);
+                            }
+
+                            if (operationString.Contains('-'))
+                            {
+                                CalculateImmediateResult(subtractDoubles, "/", finalCalculation, key);
+                            }
+                        }
+                        else
+                        {
+                            divideDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                        }
+
+                        break;
+                    }
+                case "+":
+                    {
+                        if (operationString.Contains('*') || operationString.Contains('/'))
+                        {
+                            if (operationString.Contains('*'))
+                            {
+                                multiplyDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                                CalculateImmediateResult(addDoubles, "*", finalCalculation, key);
+                            }
+                            if (operationString.Contains('/'))
+                            {
+                                divideDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                                CalculateImmediateResult(addDoubles, "/", finalCalculation, key);
+                            }
+                        }
+                        else
+                        {
+                            addDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                        }
+                        break;
+                    }
+                case "-":
+                    {
+                        if (operationString.Contains('*') || operationString.Contains('/'))
+                        {
+                            if (operationString.Contains('*'))
+                            {
+                                multiplyDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                                CalculateImmediateResult(subtractDoubles, "*", finalCalculation, key);
+                            }
+                            if (operationString.Contains('/'))
+                            {
+                                divideDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                                CalculateImmediateResult(subtractDoubles, "/", finalCalculation, key);
+                            }
+                        }
+                        else
+                        {
+                            subtractDoubles.Add(Double.Parse(operantBuffer.ToString()));
+                        }
+                        break;
+                    }
+            }
+        }
+        private void CalculateImmediateResult(List<double> output, String operatorSign, bool finalCalculation, String caller)
+        {
+            double intermediateResult = 0.0;
+
+            if (caller.Equals("+") || caller.Equals("-"))
+            {
+                if (operationString.Contains('*'))
+                {
+                    intermediateResult = _calculator.IntermediateCalculate("*", multiplyDoubles.ToArray());
+                    multiplyDoubles.Clear();
+                }
+
+                if (operationString.Contains('/'))
+                {
+                    intermediateResult = _calculator.IntermediateCalculate("/", divideDoubles.ToArray());
+                    divideDoubles.Clear();
+                }
+            }
+
+            if (finalCalculation)
+            {
+                if (caller.Equals("*") || caller.Equals("/"))
+                {
+                    if (operationString.Contains("+"))
+                    {
+                        if (operatorSign.Equals("*") && multiplyDoubles.Count > 0)
+                        {
+                            intermediateResult = _calculator.IntermediateCalculate("*", multiplyDoubles.ToArray());
+                            multiplyDoubles.Clear();
+                        }
+
+                        if (operatorSign.Equals("/") && divideDoubles.Count > 0)
+                        {
+                            intermediateResult = _calculator.IntermediateCalculate("/", divideDoubles.ToArray());
+                            divideDoubles.Clear();
+                        }
+                    }
+
+                    if (operationString.Contains("-"))
+                    {
+                        if (operatorSign.Equals("*") && multiplyDoubles.Count > 0)
+                        {
+                            intermediateResult = _calculator.IntermediateCalculate("*", multiplyDoubles.ToArray());
+                            multiplyDoubles.Clear();
+                        }
+
+                        if (operatorSign.Equals("/") && divideDoubles.Count > 0)
+                        {
+                            intermediateResult = _calculator.IntermediateCalculate("/", divideDoubles.ToArray());
+                            divideDoubles.Clear();
+                        }
+                    }
+                }
+            }
+
+            output.Add(intermediateResult);
         }
     }
 }
