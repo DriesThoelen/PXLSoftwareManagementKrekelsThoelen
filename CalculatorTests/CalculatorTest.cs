@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Linq;
+using Calculator.Operators;
 
 namespace CalculatorTests
 {
@@ -18,7 +19,7 @@ namespace CalculatorTests
         public void ShouldAddTwoOrMoreNumbersCorrectly(params double[] args)
         {
             //Arrange
-            Calculator.AddOperator sut = new Calculator.AddOperator();
+            AddOperator sut = new AddOperator();
             //Act
             double result = sut.Add(args);
             //Assert
@@ -38,7 +39,7 @@ namespace CalculatorTests
         public void ShouldSubtractTwoOrMoreNumbersCorrectly(params double[] args)
         {
             //Arrange
-            Calculator.SubtractOperator sut = new Calculator.SubtractOperator();
+            SubtractOperator sut = new SubtractOperator();
             //Act
             double result = sut.Subtract(args);
             //Assert
@@ -67,7 +68,7 @@ namespace CalculatorTests
         public void ShouldMultiplyTwoOrMoreNumbersCorrectly(params double[] args)
         {
             //Arrange
-            Calculator.MultiplyOperator sut = new Calculator.MultiplyOperator();
+            MultiplyOperator sut = new MultiplyOperator();
             //Act
             double result = sut.Multiply(args);
             //Assert
@@ -95,7 +96,7 @@ namespace CalculatorTests
         public void ShouldDivideTwoOrMoreNumbersCorrectly(params double[] args)
         {
             //Arrange
-            Calculator.DivisionOperator sut = new Calculator.DivisionOperator();
+            DivisionOperator sut = new DivisionOperator();
             //Act
             double result = sut.Divide(args);
             //Assert

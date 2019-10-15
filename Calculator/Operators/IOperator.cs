@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Calculator
+﻿namespace Calculator.Operators
 {
     /// <summary>
     /// IOperator represents an operator or function able to act on two or more operands.

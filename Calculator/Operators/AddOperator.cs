@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
-namespace Calculator
+namespace Calculator.Operators
 {
     public class AddOperator : IOperator
     {
