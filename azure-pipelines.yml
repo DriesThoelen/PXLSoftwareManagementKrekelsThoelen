@@ -39,6 +39,11 @@ steps:
     otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.0'
     codeCoverageEnabled: true
 
+- task: reportgenerator@4
+  inputs:
+    reports: 'coverage.xml'
+    targetdir: 'coveragereport'
+
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.SourcesDirectory)\Calculator\bin\$(buildConfiguration)\'
