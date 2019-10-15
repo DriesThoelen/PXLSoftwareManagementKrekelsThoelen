@@ -31,7 +31,8 @@ steps:
   inputs:
     command: 'test'
     projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "XPlat Code Coverage" --results-directory $(Build.SourcesDirectory)\TestResults'
+    arguments: '--configuration $(buildConfiguration) --logger trx --collect "XPlat Code Coverage" --results-directory $(Build.SourcesDirectory)\TestResults'
+    publishTestResults: false
 
 - task: reportgenerator@4
   inputs:
