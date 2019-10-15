@@ -33,6 +33,12 @@ steps:
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect:"XPlat Code Coverage"'
 
+- task: reportgenerator@4
+  inputs:
+    reports: 'coverage.cobertura.xml'
+    targetdir: 'coveragereport'
+    reporttypes: 'HtmlInline_AzurePipelines;Cobertura;Badges'
+
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.SourcesDirectory)\Calculator\bin\$(buildConfiguration)\'
