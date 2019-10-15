@@ -41,7 +41,7 @@ steps:
 
 - task: reportgenerator@4
   inputs:
-    reports: 'coverage.xml'
+    reports: '*.coverage'
     targetdir: 'coveragereport'
 
 - task: PublishPipelineArtifact@1
