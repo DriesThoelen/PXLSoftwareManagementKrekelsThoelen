@@ -16,11 +16,12 @@ namespace Calculator
 {
     public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
-        private readonly IImmutableDictionary<char, List<double>> Doubles;
-        private List<double> AddDoubles { get; } = new List<double>();
-        private List<double> SubtractDoubles { get; } = new List<double>();
-        private List<double> MultiplyDoubles { get; } = new List<double>();
-        private List<double> DivideDoubles { get; } = new List<double>();
+        private readonly IImmutableDictionary<char, List<double>> doubles;
+        private List<double> AddDoubles => doubles[AddOperator.SYMBOL];
+        private List<double> SubtractDoubles => doubles[SubtractOperator.SYMBOL];
+        private List<double> MultiplyDoubles => doubles[MultiplyOperator.SYMBOL];
+        private List<double> DivideDoubles => doubles[DivisionOperator.SYMBOL];
+
         private readonly List<char> allOperatorSigns = new List<char>();
         private readonly StringBuilder operandBuffer = new StringBuilder();
 
@@ -51,7 +52,7 @@ namespace Calculator
             doublesBuilder.Add(SubtractOperator.SYMBOL, new List<double>());
             doublesBuilder.Add(MultiplyOperator.SYMBOL, new List<double>());
             doublesBuilder.Add(DivisionOperator.SYMBOL, new List<double>());
-            Doubles = doublesBuilder.ToImmutable();
+            doubles = doublesBuilder.ToImmutable();
 
             AddNumberCommand = new RelayCommand<char>((key) =>
             {
