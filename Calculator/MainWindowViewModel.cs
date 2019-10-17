@@ -121,10 +121,10 @@ namespace Calculator
             get => operationString;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -188,8 +188,7 @@ namespace Calculator
             }
         }
 
-        private void CalculateImmediateResult(ICollection<double> output, char operatorSign, bool finalCalculation,
-            char caller)
+        private void CalculateImmediateResult(ICollection<double> output, char operatorSymbol, bool finalCalculation, char caller)
         {
             var intermediateResult = 0.0;
 
@@ -197,15 +196,13 @@ namespace Calculator
             {
                 if (operationString.Contains(MultiplyOperator.SYMBOL))
                 {
-                    intermediateResult =
-                        calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, MultiplyDoubles.ToArray());
+                    intermediateResult = calculator.IntermediateCalculate(MultiplyOperator.SYMBOL, MultiplyDoubles.ToArray());
                     MultiplyDoubles.Clear();
                 }
 
                 if (operationString.Contains(DivisionOperator.SYMBOL))
                 {
-                    intermediateResult =
-                        calculator.IntermediateCalculate(DivisionOperator.SYMBOL, DivideDoubles.ToArray());
+                    intermediateResult = calculator.IntermediateCalculate(DivisionOperator.SYMBOL, DivideDoubles.ToArray());
                     DivideDoubles.Clear();
                 }
             }
@@ -216,34 +213,24 @@ namespace Calculator
                 {
                     if (operationString.Contains(AddOperator.SYMBOL))
                     {
-                        switch (operatorSign)
+                        switch (operatorSymbol)
                         {
-                            case MultiplyOperator.SYMBOL when MultiplyDoubles.Count > 0:
-                                intermediateResult = calculator.IntermediateCalculate(MultiplyOperator.SYMBOL,
-                                    MultiplyDoubles.ToArray());
-                                MultiplyDoubles.Clear();
-                                break;
-                            case DivisionOperator.SYMBOL when DivideDoubles.Count > 0:
-                                intermediateResult = calculator.IntermediateCalculate(DivisionOperator.SYMBOL,
-                                    DivideDoubles.ToArray());
-                                DivideDoubles.Clear();
+                            case MultiplyOperator.SYMBOL when doubles[operatorSymbol].Count > 0:
+                            case DivisionOperator.SYMBOL when doubles[operatorSymbol].Count > 0:
+                                intermediateResult = calculator.IntermediateCalculate(operatorSymbol, doubles[operatorSymbol].ToArray());
+                                doubles[operatorSymbol].Clear();
                                 break;
                         }
                     }
 
                     if (operationString.Contains(SubtractOperator.SYMBOL))
                     {
-                        switch (operatorSign)
+                        switch (operatorSymbol)
                         {
-                            case MultiplyOperator.SYMBOL when MultiplyDoubles.Count > 0:
-                                intermediateResult = calculator.IntermediateCalculate(MultiplyOperator.SYMBOL,
-                                    MultiplyDoubles.ToArray());
-                                MultiplyDoubles.Clear();
-                                break;
-                            case DivisionOperator.SYMBOL when DivideDoubles.Count > 0:
-                                intermediateResult = calculator.IntermediateCalculate(DivisionOperator.SYMBOL,
-                                    DivideDoubles.ToArray());
-                                DivideDoubles.Clear();
+                            case MultiplyOperator.SYMBOL when doubles[operatorSymbol].Count > 0:
+                            case DivisionOperator.SYMBOL when doubles[operatorSymbol].Count > 0:
+                                intermediateResult = calculator.IntermediateCalculate(operatorSymbol, doubles[operatorSymbol].ToArray());
+                                doubles[operatorSymbol].Clear();
                                 break;
                         }
                     }

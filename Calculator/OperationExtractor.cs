@@ -9,7 +9,6 @@ namespace Calculator
     {
         private readonly List<Operation> operations = new List<Operation>();
         private readonly StringBuilder operandBuilder = new StringBuilder();
-        private StringBuilder operationStringBuilder;
         private double operand1;
         private double operand2;
 
@@ -17,7 +16,7 @@ namespace Calculator
         {
             operations.Clear();
 
-            operationStringBuilder = new StringBuilder(operationString);
+            var operationStringBuilder = new StringBuilder(operationString);
             var operationCharArray = SortOnOperatorPriority(operationString.ToCharArray());
 
             while (operationStringBuilder.Length > 0)
