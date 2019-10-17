@@ -134,6 +134,7 @@ namespace Calculator
             switch (operatorSymbol)
             {
                 case MultiplyOperator.SYMBOL:
+                case DivisionOperator.SYMBOL:
                     var calculated = false;
                     var containedOperatorSymbol = AddOperator.SYMBOL;
                     if (operationString.Contains(containedOperatorSymbol))
@@ -157,31 +158,6 @@ namespace Calculator
                     var operand = double.Parse(operandBuffer.ToString());
                     doubles[operatorSymbol].Add(operand);
                     break;
-
-                case DivisionOperator.SYMBOL:
-
-                    if (operationString.Contains(AddOperator.SYMBOL) ||
-                        operationString.Contains(SubtractOperator.SYMBOL))
-                    {
-                        if (operationString.Contains(AddOperator.SYMBOL))
-                        {
-                            CalculateImmediateResult(doubles[AddOperator.SYMBOL], DivisionOperator.SYMBOL,
-                                finalCalculation, operatorSymbol);
-                        }
-
-                        if (operationString.Contains(SubtractOperator.SYMBOL))
-                        {
-                            CalculateImmediateResult(doubles[SubtractOperator.SYMBOL], DivisionOperator.SYMBOL,
-                                finalCalculation, operatorSymbol);
-                        }
-                    }
-                    else
-                    {
-                        doubles[DivisionOperator.SYMBOL].Add(double.Parse(operandBuffer.ToString()));
-                    }
-
-                    break;
-
                 case AddOperator.SYMBOL:
 
                     if (operationString.Contains(MultiplyOperator.SYMBOL) ||
