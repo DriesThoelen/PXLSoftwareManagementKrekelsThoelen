@@ -159,31 +159,31 @@ namespace Calculator
                     doubles[operatorSymbol].Add(operand);
                     break;
                 case AddOperator.SYMBOL:
-
-                    if (operationString.Contains(MultiplyOperator.SYMBOL) ||
-                        operationString.Contains(DivisionOperator.SYMBOL))
+                    operand = double.Parse(operandBuffer.ToString());
+                    calculated = false;
+                    containedOperatorSymbol = MultiplyOperator.SYMBOL;
+                    if (operationString.Contains(containedOperatorSymbol))
                     {
-                        if (operationString.Contains(MultiplyOperator.SYMBOL))
-                        {
-                            doubles[MultiplyOperator.SYMBOL].Add(double.Parse(operandBuffer.ToString()));
-                            CalculateImmediateResult(doubles[AddOperator.SYMBOL], MultiplyOperator.SYMBOL,
-                                finalCalculation, operatorSymbol);
-                        }
-
-                        if (operationString.Contains(DivisionOperator.SYMBOL))
-                        {
-                            doubles[DivisionOperator.SYMBOL].Add(double.Parse(operandBuffer.ToString()));
-                            CalculateImmediateResult(doubles[AddOperator.SYMBOL], DivisionOperator.SYMBOL,
-                                finalCalculation, operatorSymbol);
-                        }
-                    }
-                    else
-                    {
-                        doubles[AddOperator.SYMBOL].Add(double.Parse(operandBuffer.ToString()));
+                        doubles[containedOperatorSymbol].Add(operand);
+                        CalculateImmediateResult(doubles[operatorSymbol], containedOperatorSymbol, finalCalculation, operatorSymbol);
+                        calculated = true;
                     }
 
+                    containedOperatorSymbol = DivisionOperator.SYMBOL;
+                    if (operationString.Contains(containedOperatorSymbol))
+                    {
+                        doubles[containedOperatorSymbol].Add(operand);
+                        CalculateImmediateResult(doubles[operatorSymbol], containedOperatorSymbol, finalCalculation, operatorSymbol);
+                        calculated = true;
+                    }
+
+                    if (calculated)
+                    {
+                        break;
+                    }
+
+                    doubles[operatorSymbol].Add(operand);
                     break;
-
                 case SubtractOperator.SYMBOL:
 
                     if (operationString.Contains(MultiplyOperator.SYMBOL) ||
