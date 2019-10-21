@@ -27,7 +27,7 @@ namespace Calculator
 
         private string operationString = "";
 
-        private Operation? operation;
+        private Operation? operationTree;
 
         private readonly Regex regEx = new Regex(@"\d+" + "[" +
                                                  "\\" + AddOperator.SYMBOL +
@@ -43,13 +43,13 @@ namespace Calculator
                 // Add the operatorSymbol to the input string.
                 OperationString += key;
                 operandBuffer.Append(key);
-                CreateSingleDigitOperation();
+                operationTree = CreateSingleDigitOperation();
             });
 
             AddOperationSignCommand = new RelayCommand<string>((key) =>
             {
                 var symbol = key[0];
-                CreateOperation(symbol);
+                operationTree = CreateOperation(symbol);
 
                 operandBuffer.Clear();
 
@@ -74,51 +74,54 @@ namespace Calculator
             CalculateCommand = new RelayCommand(() =>
                 {
                     operandBuffer.Clear();
+                    if (operationTree == null)
+                    {
+                        return;
+                    }
 
-                    OperationString = calculator.Calculate(operation).ToString(CultureInfo.CurrentCulture);
+                    OperationString = calculator.Calculate(operationTree).ToString(CultureInfo.CurrentCulture);
                 },
                 () => regEx.IsMatch(OperationString));
         }
 
-        private void CreateOperation(char symbol)
+        private Operation? CreateOperation(char symbol)
         {
-            if (operation?.OperationRight == null)
+            if (operationTree?.OperationRight == null)
             {
-                return;
+                return operationTree;
             }
             switch (symbol)
             {
                 case '*':
                 case '/':
-                    if (operation.Priority == 1)
+                    if (operationTree.Priority == 1)
                     {
-                        operation.OperationRight = new Operation(operation.OperationRight, symbol, 2);
+                        operationTree.OperationRight = new Operation(operationTree.OperationRight, symbol, 2);
+                        return operationTree;
                     }
                     else
                     {
-                        operation = new Operation(operation, symbol, 2);
+                        return new Operation(operationTree, symbol, 2);
                     }
-
-                    break;
                 case '+':
                 case '-':
-                    operation = new Operation(operation, symbol, 1);
-                    break;
+                    return new Operation(operationTree, symbol, 1);
+                default:
+                    return operationTree;
             }
         }
 
-        private void CreateSingleDigitOperation()
+        private Operation CreateSingleDigitOperation()
         {
             var currentNumber = double.Parse(operandBuffer.ToString());
             var fixedOperation = new Operation(currentNumber);
-            if (operation == null || operation.Priority == 0)
+            if (operationTree == null || operationTree.Priority == 0)
             {
-                operation = fixedOperation;
-                return;
+                return fixedOperation;
             }
 
-            var currentOperation = operation;
-            var rightSubOperation = operation.OperationRight;
+            var currentOperation = operationTree;
+            var rightSubOperation = operationTree.OperationRight;
             while (rightSubOperation != null && rightSubOperation.Priority != 0)
             {
                 currentOperation = rightSubOperation;
@@ -127,6 +130,7 @@ namespace Calculator
 
             currentOperation.OperationRight = fixedOperation;
             operandBuffer.Clear();
+            return operationTree;
         }
 
         public string OperationString
