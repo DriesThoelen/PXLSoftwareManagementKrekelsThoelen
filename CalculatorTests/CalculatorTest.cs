@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using System.Linq;
 using Calculator.Operators;
 
 namespace CalculatorTests
@@ -13,17 +12,16 @@ namespace CalculatorTests
         [TestCase(1.1, 2.2)]
         [TestCase(1.0, 0.0)]
         [TestCase(0.0, 2.0)]
-        [TestCase(1.0, 2.0, 3.0)]
-        [TestCase(1.0, 2.0, 3.0, 4.0)]
-        [TestCase(1.0, 2.0, 3.0, 4.0, 5.0)]
-        public void ShouldAddTwoOrMoreNumbersCorrectly(params double[] args)
+        public void ShouldAddTwoNumbersCorrectly(double arg1, double arg2)
         {
             //Arrange
-            AddOperator sut = new AddOperator();
+            FixedValueOperation value1 = arg1;
+            FixedValueOperation value2 = arg2;
+            var sut = new AddOperation(value1, value2);
             //Act
-            double result = sut.Add(args);
+            var result = sut.Calculate();
             //Assert
-            double expected = args.Sum();
+            var expected = arg1 + arg2;
             Assert.That(result, Is.EqualTo(expected));
         }
 
@@ -33,25 +31,19 @@ namespace CalculatorTests
         [TestCase(2.2, 1.1)]
         [TestCase(0.0, 1.0)]
         [TestCase(2.0, 0.0)]
-        [TestCase(3.0, 2.0, 1.0)]
-        [TestCase(4.0, 3.0, 2.0, 1.0)]
-        [TestCase(5.0, 4.0, 3.0, 2.0, 1.0)]
-        public void ShouldSubtractTwoOrMoreNumbersCorrectly(params double[] args)
+        [TestCase(3.0, 2.0)]
+        [TestCase(4.0, 3.0)]
+        [TestCase(5.0, 4.0)]
+        public void ShouldSubtractTwoNumbersCorrectly(double arg1, double arg2)
         {
             //Arrange
-            SubtractOperator sut = new SubtractOperator();
+            FixedValueOperation value1 = arg1;
+            FixedValueOperation value2 = arg2;
+            var sut = new SubtractOperation(value1, value2);
             //Act
-            double result = sut.Subtract(args);
+            var result = sut.Calculate();
             //Assert
-            double[] subtractors = args.Skip(1).ToArray();
-            double[] number = { args[0] };
-            while (subtractors.Length > 0)
-            {
-                number[0] = number.Zip(subtractors, (n1, n2) => n1 - n2).First();
-                subtractors = subtractors.Skip(1).ToArray();
-            }
-
-            double expected = number[0];
+            var expected = arg1 - arg2;
             Assert.That(result, Is.EqualTo(expected));
         }
 
@@ -62,25 +54,19 @@ namespace CalculatorTests
         [TestCase(2.0, 0.0)]
         [TestCase(0.0, 1.0)]
         [TestCase(0.0, 0.0)]
-        [TestCase(3.0, 2.0, 1.0)]
-        [TestCase(4.0, 3.0, 2.0, 1.0)]
-        [TestCase(5.0, 4.0, 3.0, 2.0, 1.0)]
-        public void ShouldMultiplyTwoOrMoreNumbersCorrectly(params double[] args)
+        [TestCase(3.0, 2.0)]
+        [TestCase(4.0, 3.0)]
+        [TestCase(5.0, 4.0)]
+        public void ShouldMultiplyTwoNumbersCorrectly(double arg1, double arg2)
         {
             //Arrange
-            MultiplyOperator sut = new MultiplyOperator();
+            FixedValueOperation value1 = arg1;
+            FixedValueOperation value2 = arg2;
+            var sut = new MultiplyOperation(value1, value2);
             //Act
-            double result = sut.Multiply(args);
+            var result = sut.Calculate();
             //Assert
-            double[] multipliers = args.Skip(1).ToArray();
-            double[] number = { args[0] };
-            while (multipliers.Length > 0)
-            {
-                number[0] = number.Zip(multipliers, (n1, n2) => n1 * n2).First();
-                multipliers = multipliers.Skip(1).ToArray();
-            }
-
-            double expected = number[0];
+            var expected = arg1 * arg2;
             Assert.That(result, Is.EqualTo(expected));
         }
 
@@ -90,25 +76,19 @@ namespace CalculatorTests
         [TestCase(2.2, 1.1)]
         [TestCase(0.0, 1.0)]
         [TestCase(2.0, 0.001)]
-        [TestCase(3.0, 2.0, 1.0)]
-        [TestCase(4.0, 3.0, 2.0, 1.0)]
-        [TestCase(5.0, 4.0, 3.0, 2.0, 1.0)]
-        public void ShouldDivideTwoOrMoreNumbersCorrectly(params double[] args)
+        [TestCase(3.0, 2.0)]
+        [TestCase(4.0, 3.0)]
+        [TestCase(5.0, 4.0)]
+        public void ShouldDivideTwoNumbersCorrectly(double arg1, double arg2)
         {
             //Arrange
-            DivisionOperator sut = new DivisionOperator();
+            FixedValueOperation value1 = arg1;
+            FixedValueOperation value2 = arg2;
+            var sut = new DivideOperation(value1, value2);
             //Act
-            double result = sut.Divide(args);
+            var result = sut.Calculate();
             //Assert
-            double[] dividers = args.Skip(1).ToArray();
-            double[] number = { args[0] };
-            while (dividers.Length > 0)
-            {
-                number[0] = number.Zip(dividers, (n1, n2) => n1 / n2).First();
-                dividers = dividers.Skip(1).ToArray();
-            }
-
-            double expected = number[0];
+            var expected = arg1 / arg2;
             Assert.That(result, Is.EqualTo(expected));
         }
     }

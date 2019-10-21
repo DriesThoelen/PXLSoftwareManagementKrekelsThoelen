@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -14,7 +15,6 @@ namespace Calculator
     {
         private readonly StringBuilder operandBuffer = new StringBuilder();
 
-        private readonly CalculatingUnit calculator = new CalculatingUnit();
         public ICommand AddNumberCommand { get; }
 
         public ICommand AddOperationSignCommand { get; }
@@ -27,111 +27,87 @@ namespace Calculator
 
         private string operationString = "";
 
-        private Operation? operationTree;
+        private OperationTree operationTree;
 
         private readonly Regex regEx = new Regex(@"\d+" + "[" +
-                                                 "\\" + AddOperator.SYMBOL +
-                                                 "\\" + SubtractOperator.SYMBOL +
-                                                 "\\" + MultiplyOperator.SYMBOL +
-                                                 "\\" + DivisionOperator.SYMBOL +
+                                                 "\\" + AddOperation.Symbol +
+                                                 "\\" + SubtractOperation.Symbol +
+                                                 "\\" + MultiplyOperation.Symbol +
+                                                 "\\" + DivideOperation.Symbol +
                                                  "]+" + @"\d+");
 
         public MainWindowViewModel()
         {
+            operationTree = new OperationTree();
+
             AddNumberCommand = new RelayCommand<string>((key) =>
             {
                 // Add the operatorSymbol to the input string.
                 OperationString += key;
                 operandBuffer.Append(key);
-                operationTree = CreateSingleDigitOperation();
             });
 
             AddOperationSignCommand = new RelayCommand<string>((key) =>
             {
+                PushValue(); // todo: state pattern? (end of number input state)
+
                 var symbol = key[0];
-                operationTree = CreateOperation(symbol);
-
-                operandBuffer.Clear();
-
                 // Add the operatorSymbol to the input string.
-                OperationString += key;
+                OperationString += symbol;
+
+                PushOperator(symbol);
             });
 
             DeleteNumberCommand = new RelayCommand(() =>
                 {
                     // Strip a character from the input string.
                     OperationString = OperationString[..^1];
+                    operandBuffer.Remove(operandBuffer.Length - 1, 1);
                 },
-                () => OperationString.Length > 0);
+                () => operandBuffer.Length > 0);
 
             ClearCommand = new RelayCommand(() =>
                 {
                     // Clear the input string.
                     OperationString = string.Empty;
+                    operandBuffer.Clear();
+                    operationTree = new OperationTree();
                 },
                 () => OperationString.Length > 0);
 
             CalculateCommand = new RelayCommand(() =>
                 {
-                    operandBuffer.Clear();
-                    if (operationTree == null)
-                    {
-                        return;
-                    }
-
-                    OperationString = calculator.Calculate(operationTree).ToString(CultureInfo.CurrentCulture);
+                    PushValue();
+                    OperationString = operationTree.Calculate().ToString(CultureInfo.CurrentCulture);
                 },
                 () => regEx.IsMatch(OperationString));
         }
 
-        private Operation? CreateOperation(char symbol)
+        private void PushValue()
         {
-            if (operationTree?.OperationRight == null)
+            if (operandBuffer.Length == 0)
             {
-                return operationTree;
+                return;
             }
-            switch (symbol)
-            {
-                case '*':
-                case '/':
-                    if (operationTree.Priority == 1)
-                    {
-                        operationTree.OperationRight = new Operation(operationTree.OperationRight, symbol, 2);
-                        return operationTree;
-                    }
-                    else
-                    {
-                        return new Operation(operationTree, symbol, 2);
-                    }
-                case '+':
-                case '-':
-                    return new Operation(operationTree, symbol, 1);
-                default:
-                    return operationTree;
-            }
-        }
 
-        private Operation CreateSingleDigitOperation()
-        {
             var currentNumber = double.Parse(operandBuffer.ToString());
-            var fixedOperation = new Operation(currentNumber);
-            if (operationTree == null || operationTree.Priority == 0)
-            {
-                return fixedOperation;
-            }
-
-            var currentOperation = operationTree;
-            var rightSubOperation = operationTree.OperationRight;
-            while (rightSubOperation != null && rightSubOperation.Priority != 0)
-            {
-                currentOperation = rightSubOperation;
-                rightSubOperation = currentOperation.OperationRight;
-            }
-
-            currentOperation.OperationRight = fixedOperation;
+            operationTree.PushValue(currentNumber);
             operandBuffer.Clear();
-            return operationTree;
         }
+
+        private void PushOperator(char symbol)
+        {
+            var operationBuilder = symbol switch
+            {
+                '*' => (IDuoOperationBuilder<DuoOperation>) MultiplyOperation.Builder(),
+                '/' => DivideOperation.Builder(),
+                '+' => AddOperation.Builder(),
+                '-' => SubtractOperation.Builder(),
+                _ => throw new ArgumentException("Unknown operator symbol", nameof(symbol))
+            };
+            operationTree.PushOperator(operationBuilder);
+        }
+
 
         public string OperationString
         {
@@ -144,9 +120,6 @@ namespace Calculator
 
                 operationString = value;
                 OnPropertyChanged(nameof(OperationString));
-
-                // Perhaps the delete button must be enabled/disabled.
-                ((RelayCommand) DeleteNumberCommand).CanExecute(true);
             }
 
             get => operationString;
