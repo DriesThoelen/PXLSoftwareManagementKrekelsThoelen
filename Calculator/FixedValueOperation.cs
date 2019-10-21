@@ -7,7 +7,8 @@ namespace Calculator
 {
     class FixedValueOperation : IOperation
     {
-        public double Digit { get; }
+        private double Digit { get; }
+        public int Priority => int.MaxValue;
 
         public FixedValueOperation(double digit)
         {

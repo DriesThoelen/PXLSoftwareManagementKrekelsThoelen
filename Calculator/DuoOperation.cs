@@ -9,6 +9,7 @@ namespace Calculator
         private IOperation OperationLeft { get; }
         private IOperation OperationRight { get; }
         protected abstract char OperatorSign { get; }
+        public abstract int Priority { get; }
 
         protected DuoOperation(IOperation operationLeft, IOperation operationRight)
         {

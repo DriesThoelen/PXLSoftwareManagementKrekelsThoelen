@@ -8,6 +8,8 @@
 
         protected override char OperatorSign => '-';
 
+        public override int Priority => 1;
+
         protected override double Calculate(double left, double right)
         {
             return left - right;

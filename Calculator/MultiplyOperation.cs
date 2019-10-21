@@ -8,6 +8,8 @@
 
         protected override char OperatorSign => '*';
 
+        public override int Priority => 2;
+
         protected override double Calculate(double left, double right)
         {
             return left * right;

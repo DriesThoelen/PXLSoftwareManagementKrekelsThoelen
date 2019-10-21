@@ -10,5 +10,7 @@ namespace Calculator
         {
             return 0;
         }
+
+        public int Priority => int.MinValue;
     }
 }

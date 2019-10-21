@@ -7,5 +7,6 @@ namespace Calculator
     interface IOperation
     {
         double Calculate();
+        int Priority { get; }
     }
 }
