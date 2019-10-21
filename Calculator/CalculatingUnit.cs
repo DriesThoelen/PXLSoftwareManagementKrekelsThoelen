@@ -1,6 +1,4 @@
-﻿using Calculator.Operators;
-
-namespace Calculator
+﻿namespace Calculator
 {
     public class CalculatingUnit
     {
@@ -12,6 +10,10 @@ namespace Calculator
             }
 
             double left = Calculate(operation.OperationLeft);
+            if (operation.OperationRight == null)
+            {
+                return left;
+            }
             double right = Calculate(operation.OperationRight);
 
             switch (operation.OperatorSign)

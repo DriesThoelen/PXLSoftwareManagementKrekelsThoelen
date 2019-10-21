@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -28,7 +27,7 @@ namespace Calculator
 
         private string operationString = "";
 
-        private Operation operation;
+        private Operation? operation;
 
         private readonly Regex regEx = new Regex(@"\d+" + "[" +
                                                  "\\" + AddOperator.SYMBOL +
@@ -83,22 +82,50 @@ namespace Calculator
 
         private void CreateOperation(char symbol)
         {
+            if (operation?.OperationRight == null)
+            {
+                return;
+            }
             switch (symbol)
             {
                 case '*':
                 case '/':
-                    operation = new Operation(operation, new Operation(1), symbol, 2);
+                    if (operation.Priority == 1)
+                    {
+                        operation.OperationRight = new Operation(operation.OperationRight, symbol, 2);
+                    }
+                    else
+                    {
+                        operation = new Operation(operation, symbol, 2);
+                    }
+
                     break;
                 case '+':
                 case '-':
-                    operation = new Operation(operation, new Operation(0), symbol, 1);
+                    operation = new Operation(operation, symbol, 1);
                     break;
             }
         }
 
         private void CreateSingleDigitOperation()
         {
-            operation = new Operation(Double.Parse(operandBuffer.ToString()));
+            var currentNumber = double.Parse(operandBuffer.ToString());
+            var fixedOperation = new Operation(currentNumber);
+            if (operation == null || operation.Priority == 0)
+            {
+                operation = fixedOperation;
+                return;
+            }
+
+            var currentOperation = operation;
+            var rightSubOperation = operation.OperationRight;
+            while (rightSubOperation != null && rightSubOperation.Priority != 0)
+            {
+                currentOperation = rightSubOperation;
+                rightSubOperation = currentOperation.OperationRight;
+            }
+
+            currentOperation.OperationRight = fixedOperation;
             operandBuffer.Clear();
         }
 
