@@ -4,13 +4,13 @@ using System.Text;
 
 namespace Calculator
 {
-    public abstract class DuoOperation : IOperation
+    abstract class DuoOperation : IOperation
     {
-        private Operation OperationLeft { get; }
-        private Operation OperationRight { get; }
+        private IOperation OperationLeft { get; }
+        private IOperation OperationRight { get; }
         protected abstract char OperatorSign { get; }
 
-        protected DuoOperation(Operation operationLeft, Operation operationRight)
+        protected DuoOperation(IOperation operationLeft, IOperation operationRight)
         {
             this.OperationLeft = operationLeft;
             this.OperationRight = operationRight;
