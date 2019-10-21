@@ -8,15 +8,23 @@ namespace Calculator
 {
     public class Operation
     {
-        public double Operant1 { get; protected set; }
-        public double Operant2 { get; protected set; }
+        public Operation OperationLeft { get; set; }
+        public Operation OperationRight { get; set; }
+        public double Digit { get; set; }
         public char OperatorSign { get; protected set; }
-
-        public Operation(double operant1, double operant2, char operatorSign)
+        public int Priority { get; protected set; }
+        public Operation(double digit)
         {
-            this.Operant1 = operant1;
-            this.Operant2 = operant2;
+            this.Digit = digit;
+            this.Priority = 0;
+        }
+
+        public Operation(Operation operationLeft, Operation operationRight, char operatorSign, int priority)
+        {
+            this.OperationLeft = operationLeft;
+            this.OperationRight = operationRight;
             this.OperatorSign = operatorSign;
+            this.Priority = priority;
         }
     }
 }
