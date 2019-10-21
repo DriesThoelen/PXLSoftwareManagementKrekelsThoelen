@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Calculator
 {
-    public class Operation
+    public class Operation : IOperation
     {
         public Operation OperationLeft { get; private set; }
         public Operation? OperationRight { get; set; }
@@ -42,6 +42,11 @@ namespace Calculator
                    OperatorSign +
                    (OperationRight == null ? " ..." : OperationRight.ToString()) +
                    ')';
+        }
+
+        public double Calculate()
+        {
+            return new CalculatingUnit().Calculate(this);
         }
     }
 }
