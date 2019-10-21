@@ -53,18 +53,19 @@ namespace Calculator
             doublesBuilder.Add(DivisionOperator.SYMBOL, new List<double>());
             doubles = doublesBuilder.ToImmutable();
 
-            AddNumberCommand = new RelayCommand<char>((key) =>
+            AddNumberCommand = new RelayCommand<string>((key) =>
             {
                 // Add the operatorSymbol to the input string.
                 OperationString += key;
                 operandBuffer.Append(key);
             });
 
-            AddOperationSignCommand = new RelayCommand<char>((key) =>
+            AddOperationSignCommand = new RelayCommand<string>((key) =>
             {
-                ParseDoubleAndOrderByOperation(key, false);
+                var symbol = key[0];
+                ParseDoubleAndOrderByOperation(symbol, false);
 
-                allOperatorSigns.Add(key);
+                allOperatorSigns.Add(symbol);
                 operandBuffer.Clear();
 
                 // Add the operatorSymbol to the input string.
