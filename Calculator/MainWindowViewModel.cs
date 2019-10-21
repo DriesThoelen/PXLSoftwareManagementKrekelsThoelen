@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,7 +13,6 @@ namespace Calculator
 {
     public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
-
         private readonly StringBuilder operandBuffer = new StringBuilder();
 
         private readonly CalculatingUnit calculator = new CalculatingUnit();
@@ -80,7 +76,7 @@ namespace Calculator
                 {
                     operandBuffer.Clear();
 
-                    OperationString = calculator.Calculate(operation).ToString();
+                    OperationString = calculator.Calculate(operation).ToString(CultureInfo.CurrentCulture);
                 },
                 () => regEx.IsMatch(OperationString));
         }
@@ -132,6 +128,5 @@ namespace Calculator
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
     }
 }
