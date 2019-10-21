@@ -18,7 +18,6 @@ namespace Calculator
     {
         private readonly IImmutableDictionary<char, List<double>> doubles;
 
-        private readonly List<char> allOperatorSigns = new List<char>();
         private readonly StringBuilder operandBuffer = new StringBuilder();
 
         private readonly CalculatingUnit calculator = new CalculatingUnit();
@@ -65,7 +64,6 @@ namespace Calculator
                 var symbol = key[0];
                 CreateOperation(symbol);
 
-                allOperatorSigns.Add(symbol);
                 operandBuffer.Clear();
 
                 // Add the operatorSymbol to the input string.
@@ -91,7 +89,6 @@ namespace Calculator
                     operandBuffer.Clear();
 
                     OperationString = calculator.Calculate(operation).ToString();
-                    allOperatorSigns.Clear();
                 },
                 () => regEx.IsMatch(OperationString));
         }
