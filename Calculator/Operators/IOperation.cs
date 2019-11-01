@@ -16,5 +16,8 @@
         /// <remarks>The result may be influenced by overflow, underflow, or other effects.
         /// This method does not guarantee sensible results on <i>weird</i> inputs.</remarks>
         double Calculate();
+
+        /// <remarks>Defined to inform the compiler this never returns null, using null c# 8's null reference handling</remarks>
+        string ToString();
     }
 }
