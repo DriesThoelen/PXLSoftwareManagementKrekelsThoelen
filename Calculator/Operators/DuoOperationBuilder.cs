@@ -48,5 +48,15 @@ namespace Calculator.Operators
             }
             return factoryFunc(leftOperand, rightOperand);
         }
+
+        internal static IDuoOperationBuilder<DuoOperation> FromSymbol(char symbol) =>
+            symbol switch
+            {
+                MultiplyOperation.Symbol => (IDuoOperationBuilder<DuoOperation>) MultiplyOperation.Builder(),
+                DivideOperation.Symbol => DivideOperation.Builder(),
+                AddOperation.Symbol => AddOperation.Builder(),
+                SubtractOperation.Symbol => SubtractOperation.Builder(),
+                _ => throw new ArgumentException("Unknown operator symbol", nameof(symbol))
+            };
     }
 }

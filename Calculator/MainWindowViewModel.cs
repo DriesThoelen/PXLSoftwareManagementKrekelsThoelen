@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -90,22 +89,14 @@ namespace Calculator
                 return;
             }
 
-            var currentNumber = double.Parse(operandBuffer.ToString());
+            var currentNumber = double.Parse(operandBuffer.ToString(), CultureInfo.CurrentCulture);
             operationTree.PushValue(currentNumber);
             operandBuffer.Clear();
         }
 
         private void PushOperator(char symbol)
         {
-            var operationBuilder = symbol switch
-            {
-                '*' => (IDuoOperationBuilder<DuoOperation>) MultiplyOperation.Builder(),
-                '/' => DivideOperation.Builder(),
-                '+' => AddOperation.Builder(),
-                '-' => SubtractOperation.Builder(),
-                _ => throw new ArgumentException("Unknown operator symbol", nameof(symbol))
-            };
-            operationTree.PushOperator(operationBuilder);
+            operationTree.PushOperator(DuoOperationBuilder<DuoOperation>.FromSymbol(symbol));
         }
 
 
