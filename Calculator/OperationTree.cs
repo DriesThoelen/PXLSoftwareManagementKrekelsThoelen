@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Calculator.Operators;
 
 namespace Calculator
@@ -68,6 +66,11 @@ namespace Calculator
         public double Calculate()
         {
             return rootOperation.Calculate();
+        }
+
+        public override string ToString()
+        {
+            return rootOperation.ToString();
         }
     }
 }
