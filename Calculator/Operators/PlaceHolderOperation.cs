@@ -10,5 +10,7 @@ namespace Calculator.Operators
         {
             throw new InvalidOperationException("A placeholder cannot be calculated");
         }
+
+        public override string ToString() => "...";
     }
 }
