@@ -15,7 +15,7 @@
                 (leftOperand, rightOperand) => new SubtractOperation(leftOperand, rightOperand));
         }
 
-        protected override char OperatorSign => Symbol;
+        public override char OperatorSign => Symbol;
 
         public override int Priority => DefaultPriority;
 
