@@ -2,10 +2,10 @@
 
 namespace Calculator.Operators
 {
-    internal abstract class BinaryOperation : IOperation
+    internal abstract class BinaryOperation : IBinaryOperation
     {
-        private IOperation OperationLeft { get; }
-        private IOperation OperationRight { get; set; }
+        public IOperation OperationLeft { get; }
+        public IOperation OperationRight { get; set; }
 
 
         public abstract char OperatorSign { get; }
@@ -41,7 +41,7 @@ namespace Calculator.Operators
             return Calculate(OperationLeft.Calculate(), OperationRight.Calculate());
         }
 
-        protected abstract double Calculate(double left, double right);
+        public abstract double Calculate(double left, double right);
 
         public override string ToString()
         {

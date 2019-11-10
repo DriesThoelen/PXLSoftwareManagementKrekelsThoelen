@@ -19,7 +19,7 @@
 
         public override int Priority => DefaultPriority;
 
-        protected override double Calculate(double left, double right)
+        public override double Calculate(double left, double right)
         {
             return left - right;
         }
