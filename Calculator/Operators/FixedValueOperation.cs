@@ -2,7 +2,7 @@
 
 namespace Calculator.Operators
 {
-    internal class FixedValueOperation : IOperation
+    internal sealed class FixedValueOperation : IOperation
     {
         private double Value { get; }
         public int Priority => int.MaxValue;

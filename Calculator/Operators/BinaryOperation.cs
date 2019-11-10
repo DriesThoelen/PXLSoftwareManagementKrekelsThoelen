@@ -7,21 +7,29 @@ namespace Calculator.Operators
         private readonly IBinaryOperator binaryOperator;
         public int Priority => binaryOperator.Priority;
 
-        private IOperation OperationLeft { get; }
-        private IOperation OperationRight { get; set; }
+        private readonly IOperation operationLeft;
+        private IOperation operationRight;
 
         public BinaryOperation Insert(IBinaryOperator rightOperator)
         {
-            var newOperation = new BinaryOperation(OperationRight, rightOperator);
-            OperationRight = newOperation;
+            // Example. Old is:
+            //   +
+            // 5   3
+            // After this.Insert(multiplyOperator) is called, new must be:
+            //    +
+            // 5     *
+            //     3   ...
+            // So multiplyOperation will be new.operationRight, taking old.operationRight (i.e. 3) as its operationLeft.
+            var newOperation = new BinaryOperation(operationRight, rightOperator);
+            operationRight = newOperation;
             return newOperation;
         }
 
         public void Insert(FixedValueOperation valueOperation)
         {
-            if (OperationRight is PlaceHolderOperation)
+            if (operationRight is PlaceHolderOperation)
             {
-                OperationRight = valueOperation;
+                operationRight = valueOperation;
             }
             else
             {
@@ -31,9 +39,9 @@ namespace Calculator.Operators
 
         private BinaryOperation(IOperation operationLeft, IBinaryOperator binaryOperator, IOperation operationRight)
         {
-            this.OperationLeft = operationLeft;
+            this.operationLeft = operationLeft;
             this.binaryOperator = binaryOperator;
-            this.OperationRight = operationRight;
+            this.operationRight = operationRight;
         }
 
         internal BinaryOperation(IOperation operationLeft, IBinaryOperator binaryOperator)
@@ -43,12 +51,12 @@ namespace Calculator.Operators
 
         public double Calculate()
         {
-            return binaryOperator.Calculate(OperationLeft.Calculate(), OperationRight.Calculate());
+            return binaryOperator.Calculate(operationLeft.Calculate(), operationRight.Calculate());
         }
 
         public override string ToString()
         {
-            return $"({OperationLeft} {binaryOperator.Symbol} {OperationRight})";
+            return $"({operationLeft} {binaryOperator.Symbol} {operationRight})";
         }
     }
 }
