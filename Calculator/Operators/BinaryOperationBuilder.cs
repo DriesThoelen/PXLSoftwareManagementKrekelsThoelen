@@ -6,13 +6,13 @@ namespace Calculator.Operators
     {
         private IOperation? leftOperand;
         private IOperation? rightOperand;
-        private readonly Func<IOperation, IOperation, IBinaryOperation> factoryFunc;
-        public int Priority { get; }
+        private readonly IBinaryOperator binaryOperator;
 
-        public BinaryOperationBuilder(int priority, Func<IOperation, IOperation, IBinaryOperation> factoryFunc)
+        public int Priority => binaryOperator.Priority;
+
+        public BinaryOperationBuilder(IBinaryOperator binaryOperator)
         {
-            this.Priority = priority;
-            this.factoryFunc = factoryFunc;
+            this.binaryOperator = binaryOperator;
         }
 
         public IBinaryOperationBuilder WithLeftOperand(IOperation operand)
@@ -33,11 +33,13 @@ namespace Calculator.Operators
             {
                 throw new InvalidOperationException("No left operand set. Use " + nameof(WithLeftOperand) + " to set the left operand");
             }
+
             if (rightOperand == null)
             {
                 throw new InvalidOperationException("No right operand set. Use " + nameof(WithRightOperand) + " to set the right operand");
             }
-            return factoryFunc(leftOperand, rightOperand);
+
+            return new BinaryOperation(leftOperand, binaryOperator, rightOperand);
         }
 
         internal static IBinaryOperationBuilder FromSymbol(char symbol)
@@ -47,7 +49,7 @@ namespace Calculator.Operators
                 return MultiplyOperator.Builder();
             }
 
-            if (symbol ==DivideOperator.Singleton.Symbol)
+            if (symbol == DivideOperator.Singleton.Symbol)
             {
                 return DivideOperator.Builder();
             }

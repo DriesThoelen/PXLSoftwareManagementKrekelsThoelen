@@ -10,8 +10,7 @@
 
         public static IBinaryOperationBuilder Builder()
         {
-            return new BinaryOperationBuilder(Singleton.Priority, 
-                (leftOperand, rightOperand) => new BinaryOperation(leftOperand, Singleton, rightOperand));
+            return new BinaryOperationBuilder(Singleton);
         }
 
         public char Symbol => '+';
