@@ -2,32 +2,32 @@
 
 namespace Calculator.Operators
 {
-    internal class BinaryOperationBuilder<T> : IBinaryOperationBuilder<T> where T : BinaryOperation
+    internal class BinaryOperationBuilder : IBinaryOperationBuilder
     {
         private IOperation? leftOperand;
         private IOperation? rightOperand;
-        private readonly Func<IOperation, IOperation, T> factoryFunc;
+        private readonly Func<IOperation, IOperation, IBinaryOperation> factoryFunc;
         public int Priority { get; }
 
-        public BinaryOperationBuilder(int priority, Func<IOperation, IOperation, T> factoryFunc)
+        public BinaryOperationBuilder(int priority, Func<IOperation, IOperation, IBinaryOperation> factoryFunc)
         {
             this.Priority = priority;
             this.factoryFunc = factoryFunc;
         }
 
-        public IBinaryOperationBuilder<T> WithLeftOperand(IOperation operand)
+        public IBinaryOperationBuilder WithLeftOperand(IOperation operand)
         {
             this.leftOperand = operand;
             return this;
         }
 
-        public IBinaryOperationBuilder<T> WithRightOperand(IOperation operand)
+        public IBinaryOperationBuilder WithRightOperand(IOperation operand)
         {
             this.rightOperand = operand;
             return this;
         }
 
-        public T Build()
+        public IBinaryOperation Build()
         {
             if (leftOperand == null)
             {
@@ -40,10 +40,10 @@ namespace Calculator.Operators
             return factoryFunc(leftOperand, rightOperand);
         }
 
-        internal static IBinaryOperationBuilder<BinaryOperation> FromSymbol(char symbol) =>
+        internal static IBinaryOperationBuilder FromSymbol(char symbol) =>
             symbol switch
             {
-                MultiplyOperator.Symbol => (IBinaryOperationBuilder<BinaryOperation>) MultiplyOperator.Builder(),
+                MultiplyOperator.Symbol => (IBinaryOperationBuilder) MultiplyOperator.Builder(),
                 DivideOperator.Symbol => DivideOperator.Builder(),
                 AddOperator.Symbol => AddOperator.Builder(),
                 SubtractOperator.Symbol => SubtractOperator.Builder(),

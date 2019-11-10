@@ -1,25 +1,26 @@
 ﻿namespace Calculator.Operators
 {
-    internal class SubtractOperator : BinaryOperation, IBinaryOperator
+    internal class SubtractOperator : IBinaryOperator
     {
         public const char Symbol = '-';
         public const int DefaultPriority = 1;
+        public static readonly IBinaryOperator Singleton = new SubtractOperator();
 
-        public SubtractOperator(IOperation operationLeft, IOperation operationRight) : base(operationLeft, operationRight)
+        private SubtractOperator()
         {
         }
 
-        public static IBinaryOperationBuilder<SubtractOperator> Builder()
+        public static IBinaryOperationBuilder Builder()
         {
-            return new BinaryOperationBuilder<SubtractOperator>(DefaultPriority,
-                (leftOperand, rightOperand) => new SubtractOperator(leftOperand, rightOperand));
+            return new BinaryOperationBuilder(DefaultPriority,
+                (leftOperand, rightOperand) => new BinaryOperation(leftOperand, Singleton, rightOperand));
         }
 
-        public override char OperatorSign => Symbol;
+        public char OperatorSign => Symbol;
 
-        public override int Priority => DefaultPriority;
+        public int Priority => DefaultPriority;
 
-        public override double Calculate(double left, double right)
+        public double Calculate(double left, double right)
         {
             return left - right;
         }

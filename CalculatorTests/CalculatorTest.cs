@@ -17,11 +17,9 @@ namespace CalculatorTests
         public void ShouldAddTwoNumbersCorrectly(double arg1, double arg2)
         {
             //Arrange
-            FixedValueOperation value1 = arg1;
-            FixedValueOperation value2 = arg2;
-            var sut = new AddOperator(value1, value2);
+            var binaryOperator = AddOperator.Singleton;
             //Act
-            var result = sut.Calculate();
+            var result = binaryOperator.Calculate(arg1, arg2);
             //Assert
             var expected = arg1 + arg2;
             Assert.That(result, Is.EqualTo(expected));
@@ -39,11 +37,9 @@ namespace CalculatorTests
         public void ShouldSubtractTwoNumbersCorrectly(double arg1, double arg2)
         {
             //Arrange
-            FixedValueOperation value1 = arg1;
-            FixedValueOperation value2 = arg2;
-            var sut = new SubtractOperator(value1, value2);
+            var binaryOperator = SubtractOperator.Singleton;
             //Act
-            var result = sut.Calculate();
+            var result = binaryOperator.Calculate(arg1, arg2);
             //Assert
             var expected = arg1 - arg2;
             Assert.That(result, Is.EqualTo(expected));
@@ -62,11 +58,9 @@ namespace CalculatorTests
         public void ShouldMultiplyTwoNumbersCorrectly(double arg1, double arg2)
         {
             //Arrange
-            FixedValueOperation value1 = arg1;
-            FixedValueOperation value2 = arg2;
-            var sut = new MultiplyOperator(value1, value2);
+            var binaryOperator = MultiplyOperator.Singleton;
             //Act
-            var result = sut.Calculate();
+            var result = binaryOperator.Calculate(arg1, arg2);
             //Assert
             var expected = arg1 * arg2;
             Assert.That(result, Is.EqualTo(expected));
@@ -84,11 +78,9 @@ namespace CalculatorTests
         public void ShouldDivideTwoNumbersCorrectly(double arg1, double arg2)
         {
             //Arrange
-            FixedValueOperation value1 = arg1;
-            FixedValueOperation value2 = arg2;
-            var sut = new DivideOperator(value1, value2);
+            var binaryOperator = DivideOperator.Singleton;
             //Act
-            var result = sut.Calculate();
+            var result = binaryOperator.Calculate(arg1, arg2);
             //Assert
             var expected = arg1 / arg2;
             Assert.That(result, Is.EqualTo(expected));
@@ -107,7 +99,7 @@ namespace CalculatorTests
         public void ShouldBuildOperation(object duoOperatorArgument, char operatorSign)
         {
             // Arrange
-            var duoOperator = duoOperatorArgument as IBinaryOperationBuilder<BinaryOperation>;
+            var duoOperator = duoOperatorArgument as IBinaryOperationBuilder;
             Assert.NotNull(duoOperator);
             FixedValueOperation operandLeft = 0.0;
             FixedValueOperation operandRight = 1.0;
@@ -166,8 +158,8 @@ namespace CalculatorTests
         private string RenderOperationTree(double operand, char firstSymbol, char secondSymbol)
         {
             // Arrange part
-            var operator1 = BinaryOperationBuilder<BinaryOperation>.FromSymbol(firstSymbol);
-            var operator2 = BinaryOperationBuilder<BinaryOperation>.FromSymbol(secondSymbol);
+            var operator1 = BinaryOperationBuilder.FromSymbol(firstSymbol);
+            var operator2 = BinaryOperationBuilder.FromSymbol(secondSymbol);
             var operationTree = new OperationTree();
 
             // Act part

@@ -105,7 +105,7 @@ namespace Calculator
 
         private void PushOperator(char symbol)
         {
-            operationTree.PushOperator(BinaryOperationBuilder<BinaryOperation>.FromSymbol(symbol));
+            operationTree.PushOperator(BinaryOperationBuilder.FromSymbol(symbol));
         }
 
 

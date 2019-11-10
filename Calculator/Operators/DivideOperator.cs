@@ -1,25 +1,26 @@
 ﻿namespace Calculator.Operators
 {
-    internal class DivideOperator : BinaryOperation, IBinaryOperator
+    internal class DivideOperator : IBinaryOperator
     {
         public const char Symbol = '/';
         public const int DefaultPriority = 2;
+        public static readonly IBinaryOperator Singleton = new DivideOperator();
 
-        public DivideOperator(IOperation operationLeft, IOperation operationRight) : base(operationLeft, operationRight)
+        private DivideOperator()
         {
         }
 
-        public static IBinaryOperationBuilder<DivideOperator> Builder()
+        public static IBinaryOperationBuilder Builder()
         {
-            return new BinaryOperationBuilder<DivideOperator>(DefaultPriority,
-                (leftOperand, rightOperand) => new DivideOperator(leftOperand, rightOperand));
+            return new BinaryOperationBuilder(DefaultPriority,
+                (leftOperand, rightOperand) => new BinaryOperation(leftOperand, Singleton, rightOperand));
         }
 
-        public override char OperatorSign => Symbol;
+        public char OperatorSign => Symbol;
 
-        public override int Priority => DefaultPriority;
+        public int Priority => DefaultPriority;
 
-        public override double Calculate(double left, double right)
+        public double Calculate(double left, double right)
         {
             return left / right;
         }

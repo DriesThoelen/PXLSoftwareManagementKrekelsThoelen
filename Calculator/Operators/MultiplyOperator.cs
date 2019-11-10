@@ -1,25 +1,26 @@
 ﻿namespace Calculator.Operators
 {
-    internal class MultiplyOperator : BinaryOperation, IBinaryOperator
+    internal class MultiplyOperator : IBinaryOperator
     {
         public const char Symbol = '*';
         public const int DefaultPriority = 2;
+        public static readonly IBinaryOperator Singleton = new MultiplyOperator();
 
-        public MultiplyOperator(IOperation operationLeft, IOperation operationRight) : base(operationLeft, operationRight)
+        private MultiplyOperator()
         {
         }
 
-        public static IBinaryOperationBuilder<MultiplyOperator> Builder()
+        public static IBinaryOperationBuilder Builder()
         {
-            return new BinaryOperationBuilder<MultiplyOperator>(DefaultPriority,
-                (leftOperand, rightOperand) => new MultiplyOperator(leftOperand, rightOperand));
+            return new BinaryOperationBuilder(DefaultPriority,
+                (leftOperand, rightOperand) => new BinaryOperation(leftOperand, Singleton, rightOperand));
         }
 
-        public override char OperatorSign => Symbol;
+        public char OperatorSign => Symbol;
 
-        public override int Priority => DefaultPriority;
+        public int Priority => DefaultPriority;
 
-        public override double Calculate(double left, double right)
+        public double Calculate(double left, double right)
         {
             return left * right;
         }

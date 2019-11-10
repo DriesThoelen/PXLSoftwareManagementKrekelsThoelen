@@ -38,7 +38,7 @@ namespace Calculator
             }
         }
 
-        internal void PushOperator<T>(IBinaryOperationBuilder<T> builder) where T : BinaryOperation
+        internal void PushOperator(IBinaryOperationBuilder builder)
         {
             builder.WithRightOperand(placeHolder);
 
@@ -47,14 +47,14 @@ namespace Calculator
                 : InsertUp(builder);
         }
 
-        private IOperation InsertUp<T>(IBinaryOperationBuilder<T> builder) where T : BinaryOperation
+        private IOperation InsertUp(IBinaryOperationBuilder builder)
         {
             var newOperation = builder.WithLeftOperand(rootOperation).Build();
             rootOperation = newOperation;
             return newOperation;
         }
 
-        private IOperation InsertRight<T>(IBinaryOperationBuilder<T> builder) where T : BinaryOperation
+        private IOperation InsertRight(IBinaryOperationBuilder builder)
         {
             if (rootOperation is BinaryOperation rootDuoOperation)
             {
