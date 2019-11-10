@@ -4,22 +4,22 @@ namespace Calculator.Operators
 {
     internal class FixedValueOperation : IOperation
     {
-        private double Digit { get; }
+        private double Value { get; }
         public int Priority => int.MaxValue;
 
-        public FixedValueOperation(double digit)
+        public FixedValueOperation(double value)
         {
-            this.Digit = digit;
+            this.Value = value;
         }
 
         public double Calculate()
         {
-            return Digit;
+            return Value;
         }
 
         public override string ToString()
         {
-            return Digit.ToString(CultureInfo.InvariantCulture);
+            return Value.ToString(CultureInfo.InvariantCulture);
         }
 
         public static implicit operator FixedValueOperation(double digit) => new FixedValueOperation(digit);

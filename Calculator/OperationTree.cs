@@ -21,7 +21,7 @@ namespace Calculator
             currentOperation = rootOperation;
         }
 
-        public void PushValue(double currentNumber)
+        internal void PushValue(double currentNumber)
         {
             FixedValueOperation fixedValue = currentNumber;
             if (currentOperation is BinaryOperation duoOperation)
