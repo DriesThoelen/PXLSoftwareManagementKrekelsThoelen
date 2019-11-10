@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Input;
 using Calculator.Operators;
 using GalaSoft.MvvmLight.Command;
@@ -20,7 +21,9 @@ namespace Calculator
 
         public ICommand DeleteNumberCommand { get; }
 
-        public ICommand ClearCommand { get; }
+        public ICommand ClearEntryCommand { get; }
+
+        public ICommand ClearAllCommand { get; }
 
         public ICommand CalculateCommand { get; }
 
@@ -65,7 +68,14 @@ namespace Calculator
                 },
                 () => operandBuffer.Length > 0);
 
-            ClearCommand = new RelayCommand(() =>
+            ClearEntryCommand = new RelayCommand(() =>
+                {
+                    OperationString = OperationString[..^operandBuffer.Length];
+                    operandBuffer.Clear();
+                },
+                () => operandBuffer.Length > 0);
+
+            ClearAllCommand = new RelayCommand(() =>
                 {
                     // Clear the input string.
                     OperationString = string.Empty;
