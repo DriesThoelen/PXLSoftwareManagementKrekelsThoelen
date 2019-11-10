@@ -2,7 +2,7 @@
 
 namespace Calculator.Operators
 {
-    internal abstract class DuoOperation : IOperation
+    internal abstract class BinaryOperation : IOperation
     {
         private IOperation OperationLeft { get; }
         private IOperation OperationRight { get; set; }
@@ -11,7 +11,7 @@ namespace Calculator.Operators
         public abstract char OperatorSign { get; }
         public abstract int Priority { get; }
 
-        public T Insert<T>(IDuoOperationBuilder<T> builder) where T : DuoOperation
+        public T Insert<T>(IBinaryOperationBuilder<T> builder) where T : BinaryOperation
         {
             var newOperation = builder.WithLeftOperand(OperationRight).Build();
             OperationRight = newOperation;
@@ -30,7 +30,7 @@ namespace Calculator.Operators
             }
         }
 
-        protected DuoOperation(IOperation operationLeft, IOperation operationRight)
+        protected BinaryOperation(IOperation operationLeft, IOperation operationRight)
         {
             this.OperationLeft = operationLeft;
             this.OperationRight = operationRight;

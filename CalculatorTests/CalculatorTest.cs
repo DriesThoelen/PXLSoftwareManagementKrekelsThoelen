@@ -107,7 +107,7 @@ namespace CalculatorTests
         public void ShouldBuildOperation(object duoOperatorArgument, char operatorSign)
         {
             // Arrange
-            var duoOperator = duoOperatorArgument as IDuoOperationBuilder<DuoOperation>;
+            var duoOperator = duoOperatorArgument as IBinaryOperationBuilder<BinaryOperation>;
             Assert.NotNull(duoOperator);
             FixedValueOperation operandLeft = 0.0;
             FixedValueOperation operandRight = 1.0;
@@ -166,8 +166,8 @@ namespace CalculatorTests
         private string RenderOperationTree(double operand, char firstSymbol, char secondSymbol)
         {
             // Arrange part
-            var operator1 = DuoOperationBuilder<DuoOperation>.FromSymbol(firstSymbol);
-            var operator2 = DuoOperationBuilder<DuoOperation>.FromSymbol(secondSymbol);
+            var operator1 = BinaryOperationBuilder<BinaryOperation>.FromSymbol(firstSymbol);
+            var operator2 = BinaryOperationBuilder<BinaryOperation>.FromSymbol(secondSymbol);
             var operationTree = new OperationTree();
 
             // Act part

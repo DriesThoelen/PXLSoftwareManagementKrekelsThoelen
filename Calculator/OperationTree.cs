@@ -27,7 +27,7 @@ namespace Calculator
         public void PushValue(double currentNumber)
         {
             FixedValueOperation fixedValue = currentNumber;
-            if (currentOperation is DuoOperation duoOperation)
+            if (currentOperation is BinaryOperation duoOperation)
             {
                 duoOperation.Insert(fixedValue);
             }
@@ -38,7 +38,7 @@ namespace Calculator
             }
         }
 
-        internal void PushOperator<T>(IDuoOperationBuilder<T> builder) where T : DuoOperation
+        internal void PushOperator<T>(IBinaryOperationBuilder<T> builder) where T : BinaryOperation
         {
             builder.WithRightOperand(placeHolder);
 
@@ -47,16 +47,16 @@ namespace Calculator
                 : InsertUp(builder);
         }
 
-        private IOperation InsertUp<T>(IDuoOperationBuilder<T> builder) where T : DuoOperation
+        private IOperation InsertUp<T>(IBinaryOperationBuilder<T> builder) where T : BinaryOperation
         {
             var newOperation = builder.WithLeftOperand(rootOperation).Build();
             rootOperation = newOperation;
             return newOperation;
         }
 
-        private IOperation InsertRight<T>(IDuoOperationBuilder<T> builder) where T : DuoOperation
+        private IOperation InsertRight<T>(IBinaryOperationBuilder<T> builder) where T : BinaryOperation
         {
-            if (rootOperation is DuoOperation rootDuoOperation)
+            if (rootOperation is BinaryOperation rootDuoOperation)
             {
                 return rootDuoOperation.Insert(builder);
             }

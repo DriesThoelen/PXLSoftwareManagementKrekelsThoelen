@@ -1,6 +1,6 @@
 ﻿namespace Calculator.Operators
 {
-    internal class DivideOperation : DuoOperation
+    internal class DivideOperation : BinaryOperation
     {
         public const char Symbol = '/';
         public const int DefaultPriority = 2;
@@ -9,9 +9,9 @@
         {
         }
 
-        public static IDuoOperationBuilder<DivideOperation> Builder()
+        public static IBinaryOperationBuilder<DivideOperation> Builder()
         {
-            return new DuoOperationBuilder<DivideOperation>(DefaultPriority,
+            return new BinaryOperationBuilder<DivideOperation>(DefaultPriority,
                 (leftOperand, rightOperand) => new DivideOperation(leftOperand, rightOperand));
         }
 

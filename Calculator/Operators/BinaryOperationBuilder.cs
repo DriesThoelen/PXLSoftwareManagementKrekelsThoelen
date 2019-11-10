@@ -3,34 +3,34 @@
 namespace Calculator.Operators
 {
     // Used because C# doesn't allow covariant generic types (out T) in classes
-    internal interface IDuoOperationBuilder<out T> where T : DuoOperation
+    internal interface IBinaryOperationBuilder<out T> where T : BinaryOperation
     {
-        IDuoOperationBuilder<T> WithLeftOperand(IOperation operand);
-        IDuoOperationBuilder<T> WithRightOperand(IOperation operand);
+        IBinaryOperationBuilder<T> WithLeftOperand(IOperation operand);
+        IBinaryOperationBuilder<T> WithRightOperand(IOperation operand);
         int Priority { get; }
         T Build();
     }
 
-    internal class DuoOperationBuilder<T> : IDuoOperationBuilder<T> where T : DuoOperation
+    internal class BinaryOperationBuilder<T> : IBinaryOperationBuilder<T> where T : BinaryOperation
     {
         private IOperation? leftOperand;
         private IOperation? rightOperand;
         private readonly Func<IOperation, IOperation, T> factoryFunc;
         public int Priority { get; }
 
-        public DuoOperationBuilder(int priority, Func<IOperation, IOperation, T> factoryFunc)
+        public BinaryOperationBuilder(int priority, Func<IOperation, IOperation, T> factoryFunc)
         {
             this.Priority = priority;
             this.factoryFunc = factoryFunc;
         }
 
-        public IDuoOperationBuilder<T> WithLeftOperand(IOperation operand)
+        public IBinaryOperationBuilder<T> WithLeftOperand(IOperation operand)
         {
             this.leftOperand = operand;
             return this;
         }
 
-        public IDuoOperationBuilder<T> WithRightOperand(IOperation operand)
+        public IBinaryOperationBuilder<T> WithRightOperand(IOperation operand)
         {
             this.rightOperand = operand;
             return this;
@@ -49,10 +49,10 @@ namespace Calculator.Operators
             return factoryFunc(leftOperand, rightOperand);
         }
 
-        internal static IDuoOperationBuilder<DuoOperation> FromSymbol(char symbol) =>
+        internal static IBinaryOperationBuilder<BinaryOperation> FromSymbol(char symbol) =>
             symbol switch
             {
-                MultiplyOperation.Symbol => (IDuoOperationBuilder<DuoOperation>) MultiplyOperation.Builder(),
+                MultiplyOperation.Symbol => (IBinaryOperationBuilder<BinaryOperation>) MultiplyOperation.Builder(),
                 DivideOperation.Symbol => DivideOperation.Builder(),
                 AddOperation.Symbol => AddOperation.Builder(),
                 SubtractOperation.Symbol => SubtractOperation.Builder(),

@@ -1,6 +1,6 @@
 ﻿namespace Calculator.Operators
 {
-    internal class SubtractOperation : DuoOperation
+    internal class SubtractOperation : BinaryOperation
     {
         public const char Symbol = '-';
         public const int DefaultPriority = 1;
@@ -9,9 +9,9 @@
         {
         }
 
-        public static IDuoOperationBuilder<SubtractOperation> Builder()
+        public static IBinaryOperationBuilder<SubtractOperation> Builder()
         {
-            return new DuoOperationBuilder<SubtractOperation>(DefaultPriority,
+            return new BinaryOperationBuilder<SubtractOperation>(DefaultPriority,
                 (leftOperand, rightOperand) => new SubtractOperation(leftOperand, rightOperand));
         }
 
