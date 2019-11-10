@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Input;
 using Calculator.Operators;
 using GalaSoft.MvvmLight.Command;
