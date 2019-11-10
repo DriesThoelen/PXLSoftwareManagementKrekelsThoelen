@@ -6,6 +6,11 @@
     /// <remarks>SE: this interface will allow us to use Liskov Substitution</remarks>
     internal interface IOperation
     {
+        /// <summary>
+        /// The <see cref="char"/> identifying this operator.
+        /// </summary>
+        /// <remarks>constant, immutable and unique per class.</remarks>
+        char OperatorSign { get; }
         int Priority { get; }
 
         /// <summary>

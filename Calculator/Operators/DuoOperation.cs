@@ -7,11 +7,8 @@ namespace Calculator.Operators
         private IOperation OperationLeft { get; }
         private IOperation OperationRight { get; set; }
 
-        /// <summary>
-        /// The <see cref="char"/> identifying this operator.
-        /// </summary>
-        /// <remarks>constant, immutable and unique per class.</remarks>
-        protected abstract char OperatorSign { get; }
+
+        public abstract char OperatorSign { get; }
         public abstract int Priority { get; }
 
         public T Insert<T>(IDuoOperationBuilder<T> builder) where T : DuoOperation
