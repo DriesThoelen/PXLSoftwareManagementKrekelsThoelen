@@ -1,8 +1,6 @@
 ﻿namespace Calculator.Operators
 {
-    /// <summary>
-    /// IOperator represents an operator or function able to act on two or more operands.
-    /// </summary>
+
     /// <remarks>SE: this interface will allow us to use Liskov Substitution</remarks>
     internal interface IOperation
     {
