@@ -5,6 +5,11 @@ namespace Calculator.Operators
     internal class PlaceHolderOperation : IOperation
     {
         public int Priority => int.MinValue;
+        public static readonly PlaceHolderOperation Singleton = new PlaceHolderOperation();
+
+        private PlaceHolderOperation()
+        {
+        }
 
         public double Calculate()
         {

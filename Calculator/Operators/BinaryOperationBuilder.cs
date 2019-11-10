@@ -5,7 +5,6 @@ namespace Calculator.Operators
     internal class BinaryOperationBuilder : IBinaryOperationBuilder
     {
         private IOperation? leftOperand;
-        private IOperation? rightOperand;
         private readonly IBinaryOperator binaryOperator;
 
         public int Priority => binaryOperator.Priority;
@@ -21,12 +20,6 @@ namespace Calculator.Operators
             return this;
         }
 
-        public IBinaryOperationBuilder WithRightOperand(IOperation operand)
-        {
-            this.rightOperand = operand;
-            return this;
-        }
-
         public IBinaryOperation Build()
         {
             if (leftOperand == null)
@@ -34,34 +27,29 @@ namespace Calculator.Operators
                 throw new InvalidOperationException("No left operand set. Use " + nameof(WithLeftOperand) + " to set the left operand");
             }
 
-            if (rightOperand == null)
-            {
-                throw new InvalidOperationException("No right operand set. Use " + nameof(WithRightOperand) + " to set the right operand");
-            }
-
-            return new BinaryOperation(leftOperand, binaryOperator, rightOperand);
+            return new BinaryOperation(leftOperand, binaryOperator);
         }
 
-        internal static IBinaryOperationBuilder FromSymbol(char symbol)
+        internal static IBinaryOperator FromSymbol(char symbol)
         {
             if (symbol == MultiplyOperator.Singleton.Symbol)
             {
-                return MultiplyOperator.Builder();
+                return MultiplyOperator.Singleton;
             }
 
             if (symbol == DivideOperator.Singleton.Symbol)
             {
-                return DivideOperator.Builder();
+                return DivideOperator.Singleton;
             }
 
             if (symbol == AddOperator.Singleton.Symbol)
             {
-                return AddOperator.Builder();
+                return AddOperator.Singleton;
             }
 
             if (symbol == SubtractOperator.Singleton.Symbol)
             {
-                return SubtractOperator.Builder();
+                return SubtractOperator.Singleton;
             }
 
             throw new ArgumentException("Unknown operator symbol", nameof(symbol));

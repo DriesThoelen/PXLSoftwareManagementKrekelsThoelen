@@ -10,9 +10,9 @@ namespace Calculator.Operators
         public IOperation OperationLeft { get; }
         public IOperation OperationRight { get; set; }
 
-        public IBinaryOperation Insert(IBinaryOperationBuilder builder)
+        public IBinaryOperation Insert(IBinaryOperator rightOperator)
         {
-            var newOperation = builder.WithLeftOperand(OperationRight).Build();
+            var newOperation = new BinaryOperation(OperationRight, rightOperator);
             OperationRight = newOperation;
             return newOperation;
         }
@@ -29,11 +29,16 @@ namespace Calculator.Operators
             }
         }
 
-        internal BinaryOperation(IOperation operationLeft, IBinaryOperator binaryOperator, IOperation operationRight)
+        private BinaryOperation(IOperation operationLeft, IBinaryOperator binaryOperator, IOperation operationRight)
         {
             this.OperationLeft = operationLeft;
             this.binaryOperator = binaryOperator;
             this.OperationRight = operationRight;
+        }
+
+        internal BinaryOperation(IOperation operationLeft, IBinaryOperator binaryOperator)
+            : this(operationLeft, binaryOperator, PlaceHolderOperation.Singleton)
+        {
         }
 
         public double Calculate()

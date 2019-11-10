@@ -15,12 +15,9 @@ namespace Calculator
         /// </summary>
         private IOperation currentOperation;
 
-        private readonly PlaceHolderOperation placeHolder;
-
         public OperationTree()
         {
-            placeHolder = new PlaceHolderOperation();
-            rootOperation = placeHolder;
+            rootOperation = PlaceHolderOperation.Singleton;
             currentOperation = rootOperation;
         }
 
@@ -38,27 +35,25 @@ namespace Calculator
             }
         }
 
-        internal void PushOperator(IBinaryOperationBuilder builder)
+        internal void PushOperator(IBinaryOperator binaryOperator)
         {
-            builder.WithRightOperand(placeHolder);
-
-            currentOperation = builder.Priority > rootOperation.Priority
-                ? InsertRight(builder)
-                : InsertUp(builder);
+            currentOperation = binaryOperator.Priority > rootOperation.Priority
+                ? InsertRight(binaryOperator)
+                : InsertUp(binaryOperator);
         }
 
-        private IOperation InsertUp(IBinaryOperationBuilder builder)
+        private IOperation InsertUp(IBinaryOperator binaryOperator)
         {
-            var newOperation = builder.WithLeftOperand(rootOperation).Build();
+            var newOperation = new BinaryOperation(rootOperation, binaryOperator);
             rootOperation = newOperation;
             return newOperation;
         }
 
-        private IOperation InsertRight(IBinaryOperationBuilder builder)
+        private IOperation InsertRight(IBinaryOperator binaryOperator)
         {
             if (rootOperation is BinaryOperation rootDuoOperation)
             {
-                return rootDuoOperation.Insert(builder);
+                return rootDuoOperation.Insert(binaryOperator);
             }
             throw new InvalidOperationException("Previous operand not found for binary operator");
         }

@@ -86,33 +86,33 @@ namespace CalculatorTests
             Assert.That(result, Is.EqualTo(expected));
         }
 
-
-        private static IEnumerable<object> Operators()
+        private static IEnumerable<IBinaryOperator> Operators()
         {
-            yield return new object[] {AddOperator.Builder(), AddOperator.Singleton.Symbol};
-            yield return new object[] {SubtractOperator.Builder(), SubtractOperator.Singleton.Symbol};
-            yield return new object[] {MultiplyOperator.Builder(), MultiplyOperator.Singleton.Symbol};
-            yield return new object[] {DivideOperator.Builder(), DivideOperator.Singleton.Symbol};
+            yield return AddOperator.Singleton;
+            yield return SubtractOperator.Singleton;
+            yield return MultiplyOperator.Singleton;
+            yield return DivideOperator.Singleton;
         }
 
         [TestCaseSource(nameof(Operators))]
-        public void ShouldBuildOperation(object duoOperatorArgument, char operatorSign)
+        public void ShouldBuildOperation(object binaryOperatorArgument)
         {
             // Arrange
-            var duoOperator = duoOperatorArgument as IBinaryOperationBuilder;
-            Assert.NotNull(duoOperator);
+            var binaryOperator = binaryOperatorArgument as IBinaryOperator;
+            Assert.NotNull(binaryOperator);
             FixedValueOperation operandLeft = 0.0;
             FixedValueOperation operandRight = 1.0;
 
             // Act
-            duoOperator.WithLeftOperand(operandLeft);
-            duoOperator.WithRightOperand(operandRight);
-            var operation = duoOperator.Build();
+            var operation = new BinaryOperation(operandLeft, binaryOperator)
+            {
+                OperationRight = operandRight
+            };
             var render = operation.ToString();
 
             // Assert
-            Assert.IsInstanceOf(duoOperator.GetType().GetGenericArguments()[0], operation);
-            Assert.AreEqual($"({operandLeft} {operatorSign} {operandRight})", render);
+            Assert.IsInstanceOf(binaryOperator.GetType().GetGenericArguments()[0], operation);
+            Assert.AreEqual($"({operandLeft} {binaryOperator.Symbol} {operandRight})", render);
         }
 
         [TestCase('+', '+')]
