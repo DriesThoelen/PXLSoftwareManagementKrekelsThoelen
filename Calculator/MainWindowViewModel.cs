@@ -31,10 +31,10 @@ namespace Calculator
         private OperationTree operationTree;
 
         private readonly Regex regEx = new Regex(@"\d+" + "[" +
-                                                 "\\" + AddOperator.Symbol +
-                                                 "\\" + SubtractOperator.Symbol +
-                                                 "\\" + MultiplyOperator.Symbol +
-                                                 "\\" + DivideOperator.Symbol +
+                                                 "\\" + AddOperator.Singleton.Symbol +
+                                                 "\\" + SubtractOperator.Singleton.Symbol +
+                                                 "\\" + MultiplyOperator.Singleton.Symbol +
+                                                 "\\" + DivideOperator.Singleton.Symbol +
                                                  "]+" + @"\d+");
 
         public MainWindowViewModel()

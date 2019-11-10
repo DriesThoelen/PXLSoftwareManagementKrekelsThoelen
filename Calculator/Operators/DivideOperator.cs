@@ -1,9 +1,7 @@
 ﻿namespace Calculator.Operators
 {
-    internal class DivideOperator : IBinaryOperator
+    internal sealed class DivideOperator : IBinaryOperator
     {
-        public const char Symbol = '/';
-        public const int DefaultPriority = 2;
         public static readonly IBinaryOperator Singleton = new DivideOperator();
 
         private DivideOperator()
@@ -12,13 +10,13 @@
 
         public static IBinaryOperationBuilder Builder()
         {
-            return new BinaryOperationBuilder(DefaultPriority,
+            return new BinaryOperationBuilder(Singleton.Priority,
                 (leftOperand, rightOperand) => new BinaryOperation(leftOperand, Singleton, rightOperand));
         }
 
-        public char OperatorSign => Symbol;
+        public char Symbol => '/';
 
-        public int Priority => DefaultPriority;
+        public int Priority => 2;
 
         public double Calculate(double left, double right)
         {

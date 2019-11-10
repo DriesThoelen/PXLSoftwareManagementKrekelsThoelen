@@ -5,7 +5,6 @@ namespace Calculator.Operators
     internal sealed class BinaryOperation : IBinaryOperation
     {
         private readonly IBinaryOperator binaryOperator;
-        public char OperatorSign => binaryOperator.OperatorSign;
         public int Priority => binaryOperator.Priority;
 
         public IOperation OperationLeft { get; }
@@ -44,7 +43,7 @@ namespace Calculator.Operators
 
         public override string ToString()
         {
-            return $"({OperationLeft} {OperatorSign} {OperationRight})";
+            return $"({OperationLeft} {binaryOperator.Symbol} {OperationRight})";
         }
     }
 }

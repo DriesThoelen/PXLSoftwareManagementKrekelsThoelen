@@ -1,9 +1,7 @@
 ﻿namespace Calculator.Operators
 {
-    internal class SubtractOperator : IBinaryOperator
+    internal sealed class SubtractOperator : IBinaryOperator
     {
-        public const char Symbol = '-';
-        public const int DefaultPriority = 1;
         public static readonly IBinaryOperator Singleton = new SubtractOperator();
 
         private SubtractOperator()
@@ -12,13 +10,13 @@
 
         public static IBinaryOperationBuilder Builder()
         {
-            return new BinaryOperationBuilder(DefaultPriority,
+            return new BinaryOperationBuilder(Singleton.Priority,
                 (leftOperand, rightOperand) => new BinaryOperation(leftOperand, Singleton, rightOperand));
         }
 
-        public char OperatorSign => Symbol;
+        public char Symbol => '-';
 
-        public int Priority => DefaultPriority;
+        public int Priority => 1;
 
         public double Calculate(double left, double right)
         {

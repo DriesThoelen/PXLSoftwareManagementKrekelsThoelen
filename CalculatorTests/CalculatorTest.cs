@@ -89,10 +89,10 @@ namespace CalculatorTests
 
         private static IEnumerable<object> Operators()
         {
-            yield return new object[] {AddOperator.Builder(), AddOperator.Symbol};
-            yield return new object[] {SubtractOperator.Builder(), SubtractOperator.Symbol};
-            yield return new object[] {MultiplyOperator.Builder(), MultiplyOperator.Symbol};
-            yield return new object[] {DivideOperator.Builder(), DivideOperator.Symbol};
+            yield return new object[] {AddOperator.Builder(), AddOperator.Singleton.Symbol};
+            yield return new object[] {SubtractOperator.Builder(), SubtractOperator.Singleton.Symbol};
+            yield return new object[] {MultiplyOperator.Builder(), MultiplyOperator.Singleton.Symbol};
+            yield return new object[] {DivideOperator.Builder(), DivideOperator.Singleton.Symbol};
         }
 
         [TestCaseSource(nameof(Operators))]

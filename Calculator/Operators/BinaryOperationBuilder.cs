@@ -40,14 +40,29 @@ namespace Calculator.Operators
             return factoryFunc(leftOperand, rightOperand);
         }
 
-        internal static IBinaryOperationBuilder FromSymbol(char symbol) =>
-            symbol switch
+        internal static IBinaryOperationBuilder FromSymbol(char symbol)
+        {
+            if (symbol == MultiplyOperator.Singleton.Symbol)
             {
-                MultiplyOperator.Symbol => (IBinaryOperationBuilder) MultiplyOperator.Builder(),
-                DivideOperator.Symbol => DivideOperator.Builder(),
-                AddOperator.Symbol => AddOperator.Builder(),
-                SubtractOperator.Symbol => SubtractOperator.Builder(),
-                _ => throw new ArgumentException("Unknown operator symbol", nameof(symbol))
-            };
+                return MultiplyOperator.Builder();
+            }
+
+            if (symbol ==DivideOperator.Singleton.Symbol)
+            {
+                return DivideOperator.Builder();
+            }
+
+            if (symbol == AddOperator.Singleton.Symbol)
+            {
+                return AddOperator.Builder();
+            }
+
+            if (symbol == SubtractOperator.Singleton.Symbol)
+            {
+                return SubtractOperator.Builder();
+            }
+
+            throw new ArgumentException("Unknown operator symbol", nameof(symbol));
+        }
     }
 }

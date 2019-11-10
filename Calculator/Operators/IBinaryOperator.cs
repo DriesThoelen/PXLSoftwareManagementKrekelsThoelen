@@ -9,7 +9,7 @@
         /// The <see cref="char"/> identifying this operator.
         /// </summary>
         /// <remarks>constant, immutable and unique per class.</remarks>
-        char OperatorSign { get; }
+        char Symbol { get; }
 
         double Calculate(double left, double right);
 
