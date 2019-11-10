@@ -111,7 +111,6 @@ namespace CalculatorTests
             var render = operation.ToString();
 
             // Assert
-            Assert.IsInstanceOf(binaryOperator.GetType().GetGenericArguments()[0], operation);
             Assert.AreEqual($"({operandLeft} {binaryOperator.Symbol} {operandRight})", render);
         }
 
