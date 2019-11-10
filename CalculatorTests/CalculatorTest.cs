@@ -158,8 +158,8 @@ namespace CalculatorTests
         private string RenderOperationTree(double operand, char firstSymbol, char secondSymbol)
         {
             // Arrange part
-            var operator1 = BinaryOperationBuilder.FromSymbol(firstSymbol);
-            var operator2 = BinaryOperationBuilder.FromSymbol(secondSymbol);
+            var operator1 = BinaryOperators.FromSymbol(firstSymbol);
+            var operator2 = BinaryOperators.FromSymbol(secondSymbol);
             var operationTree = new OperationTree();
 
             // Act part

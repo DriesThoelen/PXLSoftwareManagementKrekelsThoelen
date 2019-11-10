@@ -7,12 +7,7 @@
         private AddOperator()
         {
         }
-
-        public static IBinaryOperationBuilder Builder()
-        {
-            return new BinaryOperationBuilder(Singleton);
-        }
-
+        
         public char Symbol => '+';
 
         public int Priority => 1;
