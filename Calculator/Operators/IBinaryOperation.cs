@@ -4,9 +4,13 @@
     {
         IOperation OperationLeft { get; }
         IOperation OperationRight { get; set; }
+
+        /// <summary>
+        /// The <see cref="char"/> identifying this operator.
+        /// </summary>
+        /// <remarks>constant, immutable and unique per class.</remarks>
         char OperatorSign { get; }
-        int Priority { get; }
-        double Calculate();
+
         double Calculate(double left, double right);
     }
 }
