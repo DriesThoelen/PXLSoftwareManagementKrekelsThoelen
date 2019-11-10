@@ -104,10 +104,8 @@ namespace CalculatorTests
             FixedValueOperation operandRight = 1.0;
 
             // Act
-            var operation = new BinaryOperation(operandLeft, binaryOperator)
-            {
-                OperationRight = operandRight
-            };
+            var operation = new BinaryOperation(operandLeft, binaryOperator);
+            operation.Insert(operandRight);
             var render = operation.ToString();
 
             // Assert

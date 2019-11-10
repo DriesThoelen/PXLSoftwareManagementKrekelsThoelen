@@ -2,15 +2,15 @@
 
 namespace Calculator.Operators
 {
-    internal sealed class BinaryOperation : IBinaryOperation
+    internal sealed class BinaryOperation : IOperation
     {
         private readonly IBinaryOperator binaryOperator;
         public int Priority => binaryOperator.Priority;
 
-        public IOperation OperationLeft { get; }
-        public IOperation OperationRight { get; set; }
+        private IOperation OperationLeft { get; }
+        private IOperation OperationRight { get; set; }
 
-        public IBinaryOperation Insert(IBinaryOperator rightOperator)
+        public BinaryOperation Insert(IBinaryOperator rightOperator)
         {
             var newOperation = new BinaryOperation(OperationRight, rightOperator);
             OperationRight = newOperation;
