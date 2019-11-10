@@ -7,7 +7,6 @@ namespace Calculator.Operators
         public IOperation OperationLeft { get; }
         public IOperation OperationRight { get; set; }
 
-
         public abstract char OperatorSign { get; }
         public abstract int Priority { get; }
 

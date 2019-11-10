@@ -19,7 +19,7 @@ namespace CalculatorTests
             //Arrange
             FixedValueOperation value1 = arg1;
             FixedValueOperation value2 = arg2;
-            var sut = new AddOperation(value1, value2);
+            var sut = new AddOperator(value1, value2);
             //Act
             var result = sut.Calculate();
             //Assert
@@ -41,7 +41,7 @@ namespace CalculatorTests
             //Arrange
             FixedValueOperation value1 = arg1;
             FixedValueOperation value2 = arg2;
-            var sut = new SubtractOperation(value1, value2);
+            var sut = new SubtractOperator(value1, value2);
             //Act
             var result = sut.Calculate();
             //Assert
@@ -64,7 +64,7 @@ namespace CalculatorTests
             //Arrange
             FixedValueOperation value1 = arg1;
             FixedValueOperation value2 = arg2;
-            var sut = new MultiplyOperation(value1, value2);
+            var sut = new MultiplyOperator(value1, value2);
             //Act
             var result = sut.Calculate();
             //Assert
@@ -86,7 +86,7 @@ namespace CalculatorTests
             //Arrange
             FixedValueOperation value1 = arg1;
             FixedValueOperation value2 = arg2;
-            var sut = new DivideOperation(value1, value2);
+            var sut = new DivideOperator(value1, value2);
             //Act
             var result = sut.Calculate();
             //Assert
@@ -97,10 +97,10 @@ namespace CalculatorTests
 
         private static IEnumerable<object> Operators()
         {
-            yield return new object[] {AddOperation.Builder(), AddOperation.Symbol};
-            yield return new object[] {SubtractOperation.Builder(), SubtractOperation.Symbol};
-            yield return new object[] {MultiplyOperation.Builder(), MultiplyOperation.Symbol};
-            yield return new object[] {DivideOperation.Builder(), DivideOperation.Symbol};
+            yield return new object[] {AddOperator.Builder(), AddOperator.Symbol};
+            yield return new object[] {SubtractOperator.Builder(), SubtractOperator.Symbol};
+            yield return new object[] {MultiplyOperator.Builder(), MultiplyOperator.Symbol};
+            yield return new object[] {DivideOperator.Builder(), DivideOperator.Symbol};
         }
 
         [TestCaseSource(nameof(Operators))]

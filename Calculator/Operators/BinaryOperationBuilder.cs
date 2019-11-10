@@ -43,10 +43,10 @@ namespace Calculator.Operators
         internal static IBinaryOperationBuilder<BinaryOperation> FromSymbol(char symbol) =>
             symbol switch
             {
-                MultiplyOperation.Symbol => (IBinaryOperationBuilder<BinaryOperation>) MultiplyOperation.Builder(),
-                DivideOperation.Symbol => DivideOperation.Builder(),
-                AddOperation.Symbol => AddOperation.Builder(),
-                SubtractOperation.Symbol => SubtractOperation.Builder(),
+                MultiplyOperator.Symbol => (IBinaryOperationBuilder<BinaryOperation>) MultiplyOperator.Builder(),
+                DivideOperator.Symbol => DivideOperator.Builder(),
+                AddOperator.Symbol => AddOperator.Builder(),
+                SubtractOperator.Symbol => SubtractOperator.Builder(),
                 _ => throw new ArgumentException("Unknown operator symbol", nameof(symbol))
             };
     }
