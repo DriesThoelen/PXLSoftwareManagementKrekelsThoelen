@@ -53,7 +53,7 @@
         <Button Grid.Row="3" Grid.Column="1" Content="CE" Command="{Binding ClearEntryCommand}"/>
         <Button Grid.Row="3" Grid.Column="3" Content="C" Command="{Binding ClearAllCommand}"/>
         <Button Grid.Row="3" Grid.Column="5" Content="&#x21E6;" Command="{Binding DeleteNumberCommand}"/>
-        <Button Grid.Row="11" Grid.Column="5" Content="." Command="{Binding AddNumberCommand}" CommandParameter="."/>
+        <Button Grid.Row="11" Grid.Column="5" Content="," Command="{Binding AddNumberCommand}" CommandParameter=","/>
 
         <Button Grid.Row="3" Grid.Column="7" Content="/" Command="{Binding AddOperationSignCommand}" CommandParameter="/"/>
         <Button Grid.Row="5" Grid.Column="7" Content="*" Command="{Binding AddOperationSignCommand}" CommandParameter="*"/>
