@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Calculator.Operators;
+using Calculator.States;
 using GalaSoft.MvvmLight.Command;
 using JetBrains.Annotations;
 
@@ -37,8 +38,11 @@ namespace Calculator
                                                  "\\" + DivideOperator.Singleton.Symbol +
                                                  "]+" + @"\d+");
 
+        private State state;
+
         public MainWindowViewModel()
         {
+            state = new NumberInputState();
             operationTree = new OperationTree();
 
             AddNumberCommand = new RelayCommand<string>((key) =>
@@ -50,7 +54,7 @@ namespace Calculator
 
             AddOperationSignCommand = new RelayCommand<string>((key) =>
             {
-                PushValue(); // todo: state pattern? (end of number input state)
+                state.PushValue(operandBuffer, operationTree);
 
                 var symbol = key[0];
                 // Add the operatorSymbol to the input string.
@@ -85,22 +89,11 @@ namespace Calculator
 
             CalculateCommand = new RelayCommand(() =>
                 {
-                    PushValue();
+                    state = new EndOfNumberInputState();
+                    state.PushValue(operandBuffer, operationTree);
                     OperationString = operationTree.Calculate().ToString(CultureInfo.CurrentCulture);
                 },
                 () => regEx.IsMatch(OperationString));
-        }
-
-        private void PushValue()
-        {
-            if (operandBuffer.Length == 0)
-            {
-                return;
-            }
-
-            var currentNumber = double.Parse(operandBuffer.ToString(), CultureInfo.CurrentCulture);
-            operationTree.PushValue(currentNumber);
-            operandBuffer.Clear();
         }
 
         private void PushOperator(char symbol)
