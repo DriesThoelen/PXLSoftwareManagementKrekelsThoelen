@@ -35,7 +35,6 @@ namespace Calculator
 
         public MainWindowViewModel()
         {
-            state = new NumberInputState();
             operationTree = new OperationTree();
 
             AddNumberCommand = new RelayCommand<string>((key) =>
