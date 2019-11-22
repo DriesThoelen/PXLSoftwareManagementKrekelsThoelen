@@ -6,6 +6,6 @@ namespace Calculator.States
 {
     interface State
     {
-        void PushValue(StringBuilder operandBuffer, OperationTree operationTree);
+        void PushValue(StringBuilder operandBuffer, OperationTree operationTree, object? value = null);
     }
 }

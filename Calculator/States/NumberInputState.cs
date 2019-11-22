@@ -7,7 +7,7 @@ namespace Calculator.States
 {
     public class NumberInputState : State
     {
-        void State.PushValue(StringBuilder operandBuffer, OperationTree operationTree)
+        void State.PushValue(StringBuilder operandBuffer, OperationTree operationTree, object? value = null)
         {
             if (operandBuffer?.Length == 0)
             {

@@ -31,13 +31,6 @@ namespace Calculator
 
         private OperationTree operationTree;
 
-        private readonly Regex regEx = new Regex(@"\d+" + "[" +
-                                                 "\\" + AddOperator.Singleton.Symbol +
-                                                 "\\" + SubtractOperator.Singleton.Symbol +
-                                                 "\\" + MultiplyOperator.Singleton.Symbol +
-                                                 "\\" + DivideOperator.Singleton.Symbol +
-                                                 "]+" + @"\d+");
-
         private State state;
 
         public MainWindowViewModel()
@@ -47,6 +40,7 @@ namespace Calculator
 
             AddNumberCommand = new RelayCommand<string>((key) =>
             {
+                state = new NumberInputState();
                 // Add the operatorSymbol to the input string.
                 OperationString += key;
                 operandBuffer.Append(key);
@@ -60,7 +54,9 @@ namespace Calculator
                 // Add the operatorSymbol to the input string.
                 OperationString += symbol;
 
-                PushOperator(symbol);
+                state = new OperantInputState();
+
+                state.PushValue(operandBuffer, operationTree, symbol);
             });
 
             DeleteNumberCommand = new RelayCommand(() =>
@@ -89,18 +85,13 @@ namespace Calculator
 
             CalculateCommand = new RelayCommand(() =>
                 {
-                    state = new EndOfNumberInputState();
+                    state.PushValue(operandBuffer, operationTree);
+                    state = new ReadyToCalculateState();
                     state.PushValue(operandBuffer, operationTree);
                     OperationString = operationTree.Calculate().ToString(CultureInfo.CurrentCulture);
                 },
-                () => regEx.IsMatch(OperationString));
+                () => state is NumberInputState);
         }
-
-        private void PushOperator(char symbol)
-        {
-            operationTree.PushOperator(BinaryOperators.FromSymbol(symbol));
-        }
-
 
         public string OperationString
         {
