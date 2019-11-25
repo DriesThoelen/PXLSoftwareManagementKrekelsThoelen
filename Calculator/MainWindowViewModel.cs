@@ -31,7 +31,7 @@ namespace Calculator
 
         private OperationTree operationTree;
 
-        private State state;
+        private State state = new BeginState();
 
         public MainWindowViewModel()
         {
@@ -63,6 +63,7 @@ namespace Calculator
                     // Strip a character from the input string.
                     OperationString = OperationString[..^1];
                     operandBuffer.Remove(operandBuffer.Length - 1, 1);
+                    if (operandBuffer.Length == 0) { state = new BeginState(); }
                 },
                 () => operandBuffer.Length > 0);
 
@@ -70,6 +71,7 @@ namespace Calculator
                 {
                     OperationString = OperationString[..^operandBuffer.Length];
                     operandBuffer.Clear();
+                    state = new BeginState();
                 },
                 () => operandBuffer.Length > 0);
 
@@ -79,6 +81,7 @@ namespace Calculator
                     OperationString = string.Empty;
                     operandBuffer.Clear();
                     operationTree = new OperationTree();
+                    state = new BeginState();
                 },
                 () => OperationString.Length > 0);
 
