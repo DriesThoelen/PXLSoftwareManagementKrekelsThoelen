@@ -13,7 +13,7 @@ pool:
 
 variables:
   solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
+  buildPlatform: 'x64'
   buildConfiguration: 'Release'
   disable.coverage.autogenerate: 'true'
 
@@ -57,7 +57,16 @@ steps:
     summaryFileLocation: '$(Build.SourcesDirectory)\TestResults\report\Cobertura.xml'
     reportDirectory: '$(Build.SourcesDirectory)\TestResults\report'
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '**\Calculator\*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    zipAfterPublish: false
+
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Build.SourcesDirectory)\Calculator\bin\$(buildConfiguration)\'
+    targetPath: '$(Build.SourcesDirectory)\Calculator\bin\$(buildConfiguration)\*\win-x64\publish'
     artifact: 'Application'
+    publishLocation: 'pipeline'
