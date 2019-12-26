@@ -7,7 +7,7 @@ namespace Calculator.States
 {
     public class OperantInputState : State
     {
-        void State.PushValue(StringBuilder operandBuffer, OperationTree operationTree, object? value = null)
+        void State.PushValue(StringBuilder operandBuffer, OperationTree operationTree, object? value)
         {
             if (value != null)
             {

@@ -6,7 +6,7 @@ namespace Calculator.States
 {
     class BeginState : State
     {
-        public void PushValue(StringBuilder operandBuffer, OperationTree operationTree, object value = null)
+        public void PushValue(StringBuilder operandBuffer, OperationTree operationTree, object? value)
         {
             //Do Nothing
         }

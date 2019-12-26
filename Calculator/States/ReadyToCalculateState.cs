@@ -7,7 +7,7 @@ namespace Calculator.States
 {
     public class ReadyToCalculateState : State
     {
-        void State.PushValue(StringBuilder operandBuffer, OperationTree operationTree, object? value = null)
+        void State.PushValue(StringBuilder operandBuffer, OperationTree operationTree, object? value)
         {
             operationTree?.Calculate();
         }
