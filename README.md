@@ -9,3 +9,5 @@ Then, download and run our latest release. No specific installation required.
 
 ## Demo released
 Try the demo!
+
+Last change: 2019-12-27
