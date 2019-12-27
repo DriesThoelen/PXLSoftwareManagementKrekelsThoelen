@@ -26,21 +26,19 @@ namespace Calculator
 
         private string operationString = "";
 
-        private OperationTree operationTree;
+        private OperationTree operationTree = new OperationTree();
 
         private State state = new BeginState();
 
         public MainWindowViewModel()
         {
-            operationTree = new OperationTree();
-
             AddNumberCommand = new RelayCommand<string>((key) =>
-            {
-                state = new NumberInputState();
-                // Add the operatorSymbol to the input string.
-                OperationString += key;
-                operandBuffer.Append(key);
-            });
+                {
+                    state = new NumberInputState();
+                    // Add the operatorSymbol to the input string.
+                    OperationString += key;
+                    operandBuffer.Append(key);
+                });
 
             AddOperationSignCommand = new RelayCommand<string>(key =>
                 {
@@ -54,7 +52,7 @@ namespace Calculator
 
                     state.PushValue(operandBuffer, operationTree, symbol);
                 }, 
-                key => operationString.Length > 0);
+                key => state is NumberInputState || state is ReadyToCalculateState);
 
             DeleteNumberCommand = new RelayCommand(() =>
                 {
