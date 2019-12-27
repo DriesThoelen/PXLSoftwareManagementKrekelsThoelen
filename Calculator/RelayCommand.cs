@@ -25,4 +25,31 @@ namespace Calculator
             }
         }
     }
+
+    public class RelayCommand<T> : GalaSoft.MvvmLight.Command.RelayCommand<T>, ICommand
+    {
+
+        public RelayCommand(Action<T> execute, Func<T, bool> canExecute, bool keepTargetAlive = false) : base(execute, canExecute, keepTargetAlive)
+        {
+        }
+
+        public RelayCommand(Action<T> execute, bool keepTargetAlive = false) : base(execute, keepTargetAlive)
+        {
+        }
+
+        event EventHandler ICommand.CanExecuteChanged
+        {
+            add
+            {
+                CommandManager.RequerySuggested += value;
+                base.CanExecuteChanged += value;
+            }
+
+            remove
+            {
+                CommandManager.RequerySuggested -= value;
+                base.CanExecuteChanged -= value;
+            }
+        }
+    }
 }

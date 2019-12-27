@@ -2,11 +2,8 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Calculator.Operators;
 using Calculator.States;
-using GalaSoft.MvvmLight.Command;
 using JetBrains.Annotations;
 
 namespace Calculator
@@ -45,18 +42,19 @@ namespace Calculator
                 operandBuffer.Append(key);
             });
 
-            AddOperationSignCommand = new RelayCommand<string>((key) =>
-            {
-                state.PushValue(operandBuffer, operationTree);
+            AddOperationSignCommand = new RelayCommand<string>(key =>
+                {
+                    state.PushValue(operandBuffer, operationTree);
 
-                var symbol = key[0];
-                // Add the operatorSymbol to the input string.
-                OperationString += symbol;
+                    var symbol = key[0];
+                    // Add the operatorSymbol to the input string.
+                    OperationString += symbol;
 
-                state = new OperantInputState();
+                    state = new OperantInputState();
 
-                state.PushValue(operandBuffer, operationTree, symbol);
-            });
+                    state.PushValue(operandBuffer, operationTree, symbol);
+                }, 
+                key => operationString.Length > 0);
 
             DeleteNumberCommand = new RelayCommand(() =>
                 {
